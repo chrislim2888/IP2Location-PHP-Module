@@ -1,0 +1,43 @@
+Revision History for PHP Module for IP2Location
+
+5.00  Mon  Apr 15 15:17:00 2013
+      Added support to IP2Location DB21-24
+      Added new public function "IP2Location_get_elevation"
+      Added new public function "IP2Location_get_usage_type"
+
+4.00  Thu  Oct 01 13:09:43 2009
+      Merged all functions into one class
+      Changed functions name
+
+3.00  Wed  Aug 13 10:00:00 2008
+      Added support to IP2Location DB15-18
+      Added new public function "IP2Location_get_idd_code"
+      Added new public function "IP2Location_get_area_code"
+      Added new public function "IP2Location_get_weather_code"
+      Added new public function "IP2Location_get_weather_name"
+
+2.20  Tue  Sep 25 00:00:00 2007
+      Support PHP4 and PHP5
+
+2.10  Fri  Oct 20 00:00:00 2006
+      Support IP2Location DB11, DB12, DB13 & DB14
+
+2.00  Fri  Oct 20 00:00:00 2006
+      Support IP2Location IPv6
+
+1.30  Wed  Nov 23 16:59:58 2005
+      Minor Bug Fix
+      
+1.20  Thu  Nov 17 16:59:58 2005
+      Minor Bug Fix
+
+1.10  Thu  Oct 27 16:59:58 2005
+      Support Big Endian Machines
+
+1.00  Thu  Oct 13 16:59:58 2005
+      First release for PHP 4.0 and above
+      Added new public function "IP2Location_open"
+      Added new public function "IP2Location_close"
+      Added new public function "IP2Location_get_all"
+      Added new public structure "IP2Location"
+      Added new public structure "IP2LocationRecord"
