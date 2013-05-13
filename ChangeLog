@@ -1,9 +1,15 @@
 Revision History for PHP Module for IP2Location
 
-5.00  Mon  Apr 15 15:17:00 2013
+6.00  Wed May 08 08:43:22 2013
       Added support to IP2Location DB21-24
-      Added new public function "IP2Location_get_elevation"
-      Added new public function "IP2Location_get_usage_type"
+      Added new lookup method MEMORY_CACHE, and SHARED_MEMORY
+      New structure to use IP2Location class
+
+5.00  Fri Jan 14 09:59:15 2011
+      Added support to IP2Location DB19-20
+      Added new public function "getMcc"
+      Added new public function "getMnc"
+      Added new public function "getMobileBrand"
 
 4.00  Thu  Oct 01 13:09:43 2009
       Merged all functions into one class
