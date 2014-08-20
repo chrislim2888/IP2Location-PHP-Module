@@ -2,9 +2,9 @@
 // Preset PHP settings
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-set_time_limit(0);
+set_time_limit(30);
 
-require_once('IP2Location.php');
+require_once 'IP2Location.php';
 
 // Standard lookup with no cache
 $loc = new IP2Location('databases/IP-COUNTRY-SAMPLE.BIN', IP2Location::FILE_IO);
@@ -21,7 +21,7 @@ $loc = new IP2Location('databases/IP-COUNTRY-SAMPLE.BIN', IP2Location::FILE_IO);
 */
 //$loc = new IP2Location(ROOT . 'databases/IP-COUNTRY-SAMPLE.BIN', IP2Location::MEMORY_CACHE);
 
-$ip = '8.8.8.8';
+$ip = '80.5.10.7';
 
 // Lookup for single field
 echo 'Country Code: ' . $loc->lookup($ip, IP2Location::COUNTRY_CODE) . '<br />';

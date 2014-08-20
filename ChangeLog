@@ -1,5 +1,8 @@
 Revision History for PHP Module for IP2Location
 
+7.0.0 Wed Aug 13 12:41:16 2014
+      Added support for IPv6
+
 6.00  Wed May 08 08:43:22 2013
       Added support to IP2Location DB21-24
       Added new lookup method MEMORY_CACHE, and SHARED_MEMORY
