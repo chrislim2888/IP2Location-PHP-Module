@@ -17,7 +17,7 @@ The database will be updated in monthly basis for the greater accuracy. Free sam
 The complete database is available at http://www.ip2location.com under Premium subscription package. This module also support IP2Location IPv6 version.
 
 
-# INSTALLATION
+# Installation
 To install this module, unzip the package and copy the following files to your web folder.
  1. IP2Location.php
  2. example.php
@@ -27,7 +27,7 @@ To install this module, unzip the package and copy the following files to your w
 To test this installation, please browse example.php using web browser.
 
 
-#### NOTE
+#### Note
 This module require php_gmp extension. Please find the below procedures to enable the module.
 
 ### For Windows environment:
@@ -37,10 +37,6 @@ Uncomment the extension in php.ini by removing the semi-colon
 
 ### For Linux/Mac envionment:
    `install the php5-gmp package`
-
-
-# DEPENDENCIES
-The complete database is available at http://www.ip2location.com under subscription package.
 
 
 # Sample BIN Databases
