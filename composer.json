@@ -1,0 +1,14 @@
+{
+    "name": "ip2location/ip2location",
+    "description": "IP2Location PHP API",
+    "keywords": ["ip2location", "ip2locationlite", "geolocation", "ip"],
+    "homepage": "http://www.ip2location.com",
+    "type": "library",
+    "license": "LGPLv3",
+    "authors": [
+    {
+        "name": "IP2Location",
+        "email": "support@ip2location.com",
+        "homepage": "http://www.ip2location.com"
+    }
+]
