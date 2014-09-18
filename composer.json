@@ -6,9 +6,10 @@
     "type": "library",
     "license": "LGPLv3",
     "authors": [
-    {
+        {
         "name": "IP2Location",
         "email": "support@ip2location.com",
         "homepage": "http://www.ip2location.com"
-    }
+        }
+    ]
 }
