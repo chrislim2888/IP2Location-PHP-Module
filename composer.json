@@ -12,9 +12,9 @@
         "homepage": "http://www.ip2location.com"
         }
     ],
-	"autoload": {
-		"psr-0": {
-		  "IP2Location": ""
-		}
-	}
+     "autoload": {
+        "classmap": [
+            "IP2Location.php"
+        ]
+    }
 }
