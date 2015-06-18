@@ -5,16 +5,14 @@
     "homepage": "http://www.ip2location.com",
     "type": "library",
     "license": "LGPLv3",
+    "autoload": {
+        "classmap": ["IP2Location.php"]
+    },
     "authors": [
         {
         "name": "IP2Location",
         "email": "support@ip2location.com",
         "homepage": "http://www.ip2location.com"
         }
-    ],
-     "autoload": {
-        "classmap": [
-            "IP2Location.php"
-        ]
-    }
+    ]
 }
