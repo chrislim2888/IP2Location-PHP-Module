@@ -1,4 +1,4 @@
-#IP2Location PHP 7.0.0
+#IP2Location PHP v7
 This PHP module provides fast lookup of country, region, city, latitude, longitude, ZIP code, time zone, ISP, domain name, connection speed, IDD code, area code, weather station code, weather station name, MNC, MCC, mobile brand, elevation, and usage type from IP address by using IP2Location database. The library reads the geo location information
 from **IP2Location BIN data** file.
 
