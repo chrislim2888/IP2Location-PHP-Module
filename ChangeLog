@@ -1,7 +1,13 @@
 Revision History for PHP Module for IP2Location
 
+7.1.0 Thu Jul 23 15:15:36 2015
+      Removed dependency php_gmp
+      Fixed shared memory issues
+      Fixed binary read functions
+      Restructure lookup algorithm
+
 7.0.0 Wed Aug 13 12:41:16 2014
-      Added support for IPv6
+      Added support to IP2Location IPv6 DB2-DB24
 
 6.00  Wed May 08 08:43:22 2013
       Added support to IP2Location DB21-24

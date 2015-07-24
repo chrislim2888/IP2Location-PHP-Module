@@ -21,7 +21,7 @@ $loc = new IP2Location('databases/IP-COUNTRY-SAMPLE.BIN', IP2Location::FILE_IO);
 */
 //$loc = new IP2Location(ROOT . 'databases/IP-COUNTRY-SAMPLE.BIN', IP2Location::MEMORY_CACHE);
 
-$ip = '80.5.10.7';
+$ip = '8.8.8.8';
 
 // Lookup for single field
 echo 'Country Code: ' . $loc->lookup($ip, IP2Location::COUNTRY_CODE) . '<br />';
