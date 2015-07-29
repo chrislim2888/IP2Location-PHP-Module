@@ -1,36 +1,49 @@
 <?php
-// Preset PHP settings
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-set_time_limit(30);
-
 require_once 'IP2Location.php';
-
-// Standard lookup with no cache
-$loc = new IP2Location('databases/IP-COUNTRY-SAMPLE.BIN', IP2Location::FILE_IO);
 
 /*
    Cache whole database into system memory and share among other scripts & websites
    WARNING: Please make sure your system have sufficient RAM to enable this feature
 */
-//$loc = new IP2Location('databases/IP-COUNTRY-SAMPLE.BIN', IP2Location::SHARED_MEMORY);
+// $db = new \Ip2Location\Database('./databases/IP-COUNTRY-SAMPLE.BIN', \Ip2Location\Database::MEMORY_CACHE);
 
 /*
    Cache the database into memory to accelerate lookup speed
    WARNING: Please make sure your system have sufficient RAM to enable this feature
 */
-//$loc = new IP2Location(ROOT . 'databases/IP-COUNTRY-SAMPLE.BIN', IP2Location::MEMORY_CACHE);
+// $db = new \Ip2Location\Database('./databases/IP-COUNTRY-SAMPLE.BIN', \Ip2Location\Database::MEMORY_CACHE);
 
-$ip = '8.8.8.8';
 
-// Lookup for single field
-echo 'Country Code: ' . $loc->lookup($ip, IP2Location::COUNTRY_CODE) . '<br />';
-echo 'Country Name: ' . $loc->lookup($ip, IP2Location::COUNTRY_NAME) . '<br />';
+/*
+	Default file I/O lookup
+*/
+$db = new \Ip2Location\Database('./databases/IP-COUNTRY-SAMPLE.BIN', \Ip2Location\Database::FILE_IO);
 
-// Lookup for all fields
-$record = $loc->lookup($ip, IP2Location::ALL);
+$records = $db->lookup('8.8.8.8', \Ip2Location\Database::ALL);
 
 echo '<pre>';
-print_r($record);
+echo 'IP Number             : ' . $records['ipNumber'] . "\n";
+echo 'IP Version            : ' . $records['ipVersion'] . "\n";
+echo 'IP Address            : ' . $records['ipAddress'] . "\n";
+echo 'Country Code          : ' . $records['countryCode'] . "\n";
+echo 'Country Name          : ' . $records['countryName'] . "\n";
+echo 'Region Name           : ' . $records['regionName'] . "\n";
+echo 'City Name             : ' . $records['cityName'] . "\n";
+echo 'Latitude              : ' . $records['latitude'] . "\n";
+echo 'Longitude             : ' . $records['longitude'] . "\n";
+echo 'Area Code             : ' . $records['areaCode'] . "\n";
+echo 'IDD Code              : ' . $records['iddCode'] . "\n";
+echo 'Weather Station Code  : ' . $records['weatherStationCode'] . "\n";
+echo 'Weather Station Name  : ' . $records['weatherStationName'] . "\n";
+echo 'MCC                   : ' . $records['mcc'] . "\n";
+echo 'MNC                   : ' . $records['mnc'] . "\n";
+echo 'Mobile Carrier        : ' . $records['mobileCarrierName'] . "\n";
+echo 'Usage Type            : ' . $records['usageType'] . "\n";
+echo 'Elevation             : ' . $records['elevation'] . "\n";
+echo 'Net Speed             : ' . $records['netSpeed'] . "\n";
+echo 'Time Zone             : ' . $records['timeZone'] . "\n";
+echo 'ZIP Code              : ' . $records['zipCode'] . "\n";
+echo 'Domain Name           : ' . $records['domainName'] . "\n";
+echo 'ISP Name              : ' . $records['isp'] . "\n";
 echo '</pre>';
 ?>
