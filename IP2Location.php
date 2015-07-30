@@ -32,10 +32,10 @@ class Database {
    *
    * @var string
    */
-  const VERSION = '7.2.0';
+  const VERSION = '7.2.2';
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //  Field selection constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
@@ -58,6 +58,10 @@ class Database {
    * @var string
    */
   const INVALID_IP_ADDRESS = 'Invalid IP address.';
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //  Field selection constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
    * Country code (ISO 3166-1 Alpha 2)
@@ -263,6 +267,80 @@ class Database {
   const IP_NUMBER = 1004;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //  Exception code constants  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Generic exception code
+   *
+   * @var int
+   */
+  const EXCEPTION = 10000;
+
+  /**
+   * No shmop extension found
+   *
+   * @var int
+   */
+  const EXCEPTION_NO_SHMOP = 10001;
+
+  /**
+   * Failed to open shmop memory segment for reading
+   *
+   * @var int
+   */
+  const EXCEPTION_SHMOP_READING_FAILED = 10002;
+
+  /**
+   * Failed to open shmop memory segment for writing
+   *
+   * @var int
+   */
+  const EXCEPTION_SHMOP_WRITING_FAILED = 10003;
+
+  /**
+   * Failed to create shmop memory segment
+   *
+   * @var int
+   */
+  const EXCEPTION_SHMOP_CREATE_FAILED = 10004;
+
+  /**
+   * The specified database file was not found
+   *
+   * @var int
+   */
+  const EXCEPTION_DBFILE_NOT_FOUND = 10005;
+
+  /**
+   * Not enough memory to load database file
+   *
+   * @var int
+   */
+  const EXCEPTION_NO_MEMORY = 10006;
+
+  /**
+   * No candidate databse files found
+   *
+   * @var int
+   */
+  const EXCEPTION_NO_CANDIDATES = 10007;
+
+  /**
+   * Failed to open database file
+   *
+   * @var int
+   */
+  const EXCEPTION_FILE_OPEN_FAILED = 10008;
+
+  /**
+   * Failed to determine the current path
+   *
+   * @var int
+   */
+  const EXCEPTION_NO_PATH = 10009;
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Caching method constants  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -271,21 +349,21 @@ class Database {
    *
    * @var int
    */
-  const FILE_IO = 10001;
+  const FILE_IO = 100001;
 
   /**
    * Read the whole database into a variable for caching
    *
    * @var int
    */
-  const MEMORY_CACHE = 10002;
+  const MEMORY_CACHE = 100002;
 
   /**
    * Use shared memory objects for caching
    *
    * @var int
    */
-  const SHARED_MEMORY = 10003;
+  const SHARED_MEMORY = 100003;
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Shared memory constants  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -451,6 +529,15 @@ class Database {
    */
   private static $floatSize = null;
 
+  /**
+   * The configured memory limit
+   *
+   * @access private
+   * @static
+   * @var int
+   */
+  private static $memoryLimit = null;
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Caching backend controls  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -464,7 +551,7 @@ class Database {
   private $mode;
 
   /**
-   * File pointer to use for FILE_IO mode, BIN filename for MEMORY_CACHE mode, or shared memory id to use for SHARED_MEMORY mode, or false on other modes
+   * File pointer to use for FILE_IO mode, BIN filename for MEMORY_CACHE mode, or shared memory id to use for SHARED_MEMORY mode
    *
    * @access private
    * @var resource|int|false
@@ -524,6 +611,18 @@ class Database {
   private $ipBase = [];
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //  Default fields  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  /**
+   * Default fields to return during lookup
+   *
+   * @access private
+   * @var int|array
+   */
+  private $defaultFields = self::ALL;
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Administrative public interface  /////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -535,21 +634,23 @@ class Database {
    * @param int $mode  Caching mode (one of FILE_IO, MEMORY_CACHE, or SHARED_MEMORY)
    * @throws \Exception
    */
-  public function __construct($file = null, $mode = self::FILE_IO) {
-    // find the referred file
+  public function __construct($file = null, $mode = self::FILE_IO, $defaultFields = self::ALL) {
+    // find the referred file and its size
     $rfile = self::findFile($file);
+    $size  = filesize($rfile);
 
     // initialize caching backend
     switch ($mode) {
       case self::SHARED_MEMORY:
         // verify the shmop extension is loaded
         if (!extension_loaded('shmop')) {
-          throw new \Exception(__CLASS__ . ": Please make sure your PHP setup has the 'shmop' extension enabled.");
+          throw new \Exception(__CLASS__ . ": Please make sure your PHP setup has the 'shmop' extension enabled.", self::EXCEPTION_NO_SHMOP);
         }
 
-		if (filesize($rfile) > self::getMemoryLimit()) {
-		  throw new \Exception(__CLASS__ . ": Insufficient memory to load file '{$file}'.");
-		}
+        $limit = self::getMemoryLimit();
+        if (false !== $limit && $size > $limit) {
+          throw new \Exception(__CLASS__ . ": Insufficient memory to load file '{$rfile}'.", self::EXCEPTION_NO_MEMORY);
+        }
 
         $this->mode = self::SHARED_MEMORY;
         $shmKey     = self::getShmKey($rfile);
@@ -560,14 +661,13 @@ class Database {
           // the segment did not exist, create it and load the database into it
           $fp = fopen($rfile, 'rb');
           if (false === $fp) {
-            throw new \Exception(__CLASS__ . ": Unable to open file '{$file}'.");
+            throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
           }
-          $size = fstat($fp)['size'];
 
           // try to open the memory segment for exclusive access
           $shmId = @shmop_open($shmKey, 'n', self::SHM_PERMS, $size);
           if (false === $shmId) {
-            throw new \Exception(__CLASS__ . ": Unable to create shared memory block '{$shmKey}'.");
+            throw new \Exception(__CLASS__ . ": Unable to create shared memory block '{$shmKey}'.", self::EXCEPTION_SHMOP_CREATE_FAILED);
           }
 
           // load SHM_CHUNK_SIZE bytes at a time
@@ -583,7 +683,7 @@ class Database {
           // now open the memory segment for readonly access
           $this->resource = @shmop_open($shmKey, 'a', 0, 0);
           if (false === $this->resource) {
-            throw new \Exception(__CLASS__ . ": Unable to access shared memory block '{$shmKey}'.");
+            throw new \Exception(__CLASS__ . ": Unable to access shared memory block '{$shmKey}' for reading.", self::EXCEPTION_SHMOP_READING_FAILED);
           }
         }
         break;
@@ -592,7 +692,7 @@ class Database {
         $this->mode     = self::FILE_IO;
         $this->resource = @fopen($rfile, 'rb');
         if (false === $this->resource) {
-          throw new \Exception(__CLASS__ . ": Unable to open file '{$file}'.");
+          throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
         }
         break;
 
@@ -600,17 +700,17 @@ class Database {
         $this->mode     = self::MEMORY_CACHE;
         $this->resource = $rfile;
         if (!array_key_exists($rfile, self::$buffer)) {
-		  if (filesize($rfile) > self::getMemoryLimit()) {
-			throw new \Exception(__CLASS__ . ": Insufficient memory to load file '{$file}'.");
-		  }
+          $limit = self::getMemoryLimit();
+          if (false !== $limit && $size > $limit) {
+            throw new \Exception(__CLASS__ . ": Insufficient memory to load file '{$rfile}'.", self::EXCEPTION_NO_MEMORY);
+          }
 
-		  self::$buffer[$rfile] = @file_get_contents($rfile);
-
+          self::$buffer[$rfile] = @file_get_contents($rfile);
           if (false === self::$buffer[$rfile]) {
-            throw new \Exception(__CLASS__ . ": Unable to load file '{$file}' into memory.");
+            throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
           }
         }
-		break;
+        break;
 
       default:
     }
@@ -624,6 +724,9 @@ class Database {
     if (null === self::$floatSize) {
       self::$floatSize = strlen(pack('f', M_PI));
     }
+
+    // set default fields to retrieve
+    $this->defaultFields = $defaultFields;
 
     // extract database metadata
     $this->type           = $this->readByte(1) - 1;
@@ -676,27 +779,28 @@ class Database {
    * @throws \Exception
    */
   public static function shmTeardown($file) {
-    // get actual file path
-    $rfile = realpath($file);
-
-    // if the file cannot be found, except away
-    if (false === $rfile) {
-      throw new \Exception(__CLASS__ . ": Database file '{$file}' does not seem to exist.");
-    }
-
     // verify the shmop extension is loaded
     if (!extension_loaded('shmop')) {
-      throw new \Exception(__CLASS__ . ": Please make sure your PHP setup has the 'shmop' extension enabled.");
+      throw new \Exception(__CLASS__ . ": Please make sure your PHP setup has the 'shmop' extension enabled.", self::EXCEPTION_NO_SHMOP);
+    }
+
+    // Get actual file path
+    $rfile = realpath($file);
+
+	// If the file cannot be found, except away
+    if (false === $rfile) {
+      throw new \Exception(__CLASS__ . ": Database file '{$file}' does not seem to exist.", self::EXCEPTION_DBFILE_NOT_FOUND);
     }
 
     $shmKey = self::getShmKey($rfile);
-    // try to open the memory segment for writing
+
+	// Try to open the memory segment for writing
     $shmId  = @shmop_open($shmKey, 'w', 0, 0);
     if (false === $shmId) {
-      throw new \Exception(__CLASS__ . ": Unable to access shared memory block '{$shmKey}'.");
+      throw new \Exception(__CLASS__ . ": Unable to access shared memory block '{$shmKey}' for writing.", self::EXCEPTION_SHMOP_WRITING_FAILED);
     }
 
-    // delete and close the descriptor
+    // Delete and close the descriptor
     shmop_delete($shmId);
     shmop_close($shmId);
   }
@@ -704,64 +808,77 @@ class Database {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Static tools  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   /**
-   * Get memory limit for current PHP settings
+
+  /**
+   * Get memory limit from the current PHP settings (return false if no memory limit set)
    *
    * @access private
    * @static
-   * @return int
+   * @return int|boolean
    */
   private static function getMemoryLimit() {
-    $limit = ini_get('memory_limit');
+    // Get values if no cache
+    if (null === self::$memoryLimit) {
+      $limit = ini_get('memory_limit');
 
-	switch (strtoupper(substr($limit, -1))) {
-		case 'K':
-			return substr($limit, 0, -1) * 1024;
+	  // Feal with defaults
+      if ('' === (string) $limit) {
+        $limit = '128M';
+      }
 
-		case 'M':
-			return substr($limit, 0, -1) * 1024 * 1024;
+      $value = (int) $limit;
 
-		case 'G':
-			return substr($limit, 0, -1) * 1024 * 1024 * 1024;
-
-		default:
-			return $limit;
-	}
+	  // Deal with "no-limit"
+      if ($value < 0) {
+        $value = false;
+      } else {
+        // Deal with shorthand bytes
+        switch (strtoupper(substr($limit, -1))) {
+          case 'G': $value *= 1024;
+          case 'M': $value *= 1024;
+          case 'K': $value *= 1024;
+        }
+      }
+      self::$memoryLimit = $value;
+    }
+    return self::$memoryLimit;
   }
 
   /**
-   * Return the realpath of the given file or look for the first matching database option, or false if none found
+   * Return the realpath of the given file or look for the first matching database option
    *
    * @param string $file  File to try to find, or null to try the databases in turn on the current file's path
-   * @return string|boolean
+   * @return string
    * @throws \Exception
    */
   private static function findFile($file = null) {
     if (null !== $file) {
-      // get actual file path
+      // Get actual file path
       $rfile = realpath($file);
 
-      // if the file cannot be found, except away
+      // If the file cannot be found, except away
       if (false === $rfile) {
-        throw new \Exception(__CLASS__ . ": Database file '{$file}' does not seem to exist.");
+        throw new \Exception(__CLASS__ . ": Database file '{$file}' does not seem to exist.", self::EXCEPTION_DBFILE_NOT_FOUND);
       }
 
-	  return $rfile;
+      return $rfile;
     } else {
+      // Try to get current path
       $current = realpath(dirname(__FILE__));
-      if (false === $current) {
-        throw new \Exception(__CLASS__ . ": Cannot determine current path!");
-      }
 
+	  if (false === $current) {
+        throw new \Exception(__CLASS__ . ": Cannot determine current path.", self::EXCEPTION_NO_PATH);
+      }
+      // Try each database in turn
       foreach (self::$databases as $database) {
         $rfile = realpath("{$current}/{$database}.BIN");
         if (false !== $rfile) {
           return $rfile;
         }
       }
+      // No candidates found
+      throw new \Exception(__CLASS__ . ": No candidate database files found.", self::EXCEPTION_NO_CANDIDATES);
     }
-
-    return false;
   }
 
   /**
@@ -797,9 +914,9 @@ class Database {
    * @return int
    */
   private static function getShmKey($filename) {
-    // this will create a shared memory key that deterministically depends only on
+    // This will create a shared memory key that deterministically depends only on
     // the current file's path and the BIN file's path
-    return (int) sprintf('%u', crc32(__FILE__ . ':' . $filename));
+    return (int) sprintf('%u', self::wrap32(crc32(__FILE__ . ':' . $filename)));
   }
 
   /**
@@ -810,7 +927,7 @@ class Database {
    *
    * @access private
    * @static
-   * @param int $version  IP version to use (ither 4 or 6)
+   * @param int $version  IP version to use (either 4 or 6)
    * @param int|string $ip  IP number to check (int for IPv4, string for IPv6)
    * @param int|string $low  Lower bound (int for IPv4, string for IPv6)
    * @param int|string $high  Uppoer bound (int for IPv4, string for IPv6)
@@ -818,7 +935,7 @@ class Database {
    */
   private static function ipBetween($version, $ip, $low, $high) {
     if (4 === $version) {
-      // use normal PHP ints
+      // Use normal PHP ints
       if ($low <= $ip) {
         if ($ip < $high) {
           return 0;
@@ -829,7 +946,7 @@ class Database {
         return -1;
       }
     } else {
-      // use BCMath
+      // Use BCMath
       if (bccomp($low, $ip, 0) <= 0) {
         if (bccomp($ip, $high, 0) <= -1) {
           return 0;
@@ -858,13 +975,13 @@ class Database {
    */
   private static function ipVersionAndNumber($ip) {
     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-      // use bin2hex + base_convert to deal with normal PHP ints
+      // Use bin2hex + base_convert to deal with normal PHP ints
       return [4, (int) base_convert(bin2hex(inet_pton($ip)), 16, 10)];
     } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-      // use bcBin2Dec to deal with BCMath ints
+      // Use bcBin2Dec to deal with BCMath ints
       return [6, self::bcBin2Dec(inet_pton($ip))];
     } else {
-      // invalid IP address, return falses
+      // Invalid IP address, return falses
       return [false, false];
     }
   }
@@ -879,11 +996,11 @@ class Database {
    */
   private static function bcBin2Dec($data) {
     $result = '0';
-    // at each step, take a 32 bit hex value, get its decimal equivalent,
+    // At each step, take a 32 bit hex value, get its decimal equivalent,
     // and add it to the result of multiplying the accumulated result by
     // 2^32 (to "move" it a word's worth)
     foreach (str_split(bin2hex($data), 8) as $word) {
-      $result = bcadd(bcmul($result, '4294967296', 0), hexdec($word), 0);
+      $result = bcadd(bcmul($result, '4294967296', 0), self::wrap32(hexdec($word)), 0);
     }
     return $result;
   }
@@ -927,9 +1044,10 @@ class Database {
    * @return string
    */
   private function readString($pos, $additional = 0) {
-    // get the actual pointer to the string's head
+    // Get the actual pointer to the string's head
     $spos = $this->readWord($pos) + $additional;
-    // read as much as the length (first "string" byte) indicates
+
+	// Read as much as the length (first "string" byte) indicates
     return $this->read($spos + 1, $this->readByte($spos + 1));
   }
 
@@ -941,7 +1059,7 @@ class Database {
    * @return float
    */
   private function readFloat($pos) {
-    // unpack a float's size worth of data
+    // Unpack a float's size worth of data
     return unpack('f', $this->read($pos - 1, self::$floatSize))[1];
   }
 
@@ -953,7 +1071,7 @@ class Database {
    * @return string
    */
   private function readQuad($pos) {
-    // use BCMath ints to get a quad's (128-bit) value
+    // Use BCMath ints to get a quad's (128-bit) value
     return self::bcBin2Dec($this->read($pos - 1, 16));
   }
 
@@ -965,7 +1083,7 @@ class Database {
    * @return int
    */
   private function readWord($pos) {
-    // unpack a long's worth of data
+    // Unpack a long's worth of data
     return self::wrap32(unpack('V', $this->read($pos - 1, 4))[1]);
   }
 
@@ -977,7 +1095,7 @@ class Database {
    * @return string
    */
   private function readByte($pos) {
-    // unpack a byte's worth of data
+    // Unpack a byte's worth of data
     return self::wrap8(unpack('C', $this->read($pos - 1, 1))[1]);
   }
 
@@ -994,20 +1112,21 @@ class Database {
    */
   private function readCountryNameAndCode($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $countryCode = self::INVALID_IP_ADDRESS;
       $countryName = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::COUNTRY_CODE][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $countryCode = self::FIELD_NOT_SUPPORTED;
       $countryName = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read the country code and name (the name shares the country's pointer,
+      // Read the country code and name (the name shares the country's pointer,
       // but it must be artificially displaced 3 bytes ahead: 2 for the country code, one
       // for the country name's length)
       $countryCode = $this->readString($pointer + self::$columns[self::COUNTRY_CODE][$this->type]);
       $countryName = $this->readString($pointer + self::$columns[self::COUNTRY_NAME][$this->type], 3);
     }
+
     return [$countryName, $countryCode];
   }
 
@@ -1020,13 +1139,13 @@ class Database {
    */
   private function readRegionName($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $regionName = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::REGION_NAME][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $regionName = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read the region name
+      // Read the region name
       $regionName = $this->readString($pointer + self::$columns[self::REGION_NAME][$this->type]);
     }
     return $regionName;
@@ -1041,13 +1160,13 @@ class Database {
    */
   private function readCityName($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $cityName = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::CITY_NAME][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $cityName = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read the city name
+      // Read the city name
       $cityName = $this->readString($pointer + self::$columns[self::CITY_NAME][$this->type]);
     }
     return $cityName;
@@ -1062,15 +1181,15 @@ class Database {
    */
   private function readLatitudeAndLongitude($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $latitude  = self::INVALID_IP_ADDRESS;
       $longitude = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::LATITUDE][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $latitude  = self::FIELD_NOT_SUPPORTED;
       $longitude = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read latitude and longitude
+      // Read latitude and longitude
       $latitude  = $this->readFloat($pointer + self::$columns[self::LATITUDE][$this->type]);
       $longitude = $this->readFloat($pointer + self::$columns[self::LONGITUDE][$this->type]);
     }
@@ -1086,13 +1205,13 @@ class Database {
    */
   private function readIsp($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $isp = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::ISP][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $isp = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read isp name
+      // Read isp name
       $isp = $this->readString($pointer + self::$columns[self::ISP][$this->type]);
     }
     return $isp;
@@ -1107,13 +1226,13 @@ class Database {
    */
   private function readDomainName($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $domainName = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::DOMAIN_NAME][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $domainName = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read the domain name
+      // Read the domain name
       $domainName = $this->readString($pointer + self::$columns[self::DOMAIN_NAME][$this->type]);
     }
     return $domainName;
@@ -1128,13 +1247,13 @@ class Database {
    */
   private function readZipCode($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $zipCode = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::ZIP_CODE][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $zipCode = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read the zip code
+      // Read the zip code
       $zipCode = $this->readString($pointer + self::$columns[self::ZIP_CODE][$this->type]);
     }
     return $zipCode;
@@ -1149,13 +1268,13 @@ class Database {
    */
   private function readTimeZone($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $timeZone = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::TIME_ZONE][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $timeZone = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read the time zone
+      // Read the time zone
       $timeZone = $this->readString($pointer + self::$columns[self::TIME_ZONE][$this->type]);
     }
     return $timeZone;
@@ -1170,13 +1289,13 @@ class Database {
    */
   private function readNetSpeed($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $netSpeed = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::NET_SPEED][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $netSpeed = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read the net speed
+      // Read the net speed
       $netSpeed = $this->readString($pointer + self::$columns[self::NET_SPEED][$this->type]);
     }
     return $netSpeed;
@@ -1191,15 +1310,15 @@ class Database {
    */
   private function readIddAndAreaCodes($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $iddCode  = self::INVALID_IP_ADDRESS;
       $areaCode = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::IDD_CODE][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $iddCode  = self::FIELD_NOT_SUPPORTED;
       $areaCode = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read IDD and area codes
+      // Read IDD and area codes
       $iddCode  = $this->readString($pointer + self::$columns[self::IDD_CODE][$this->type]);
       $areaCode = $this->readString($pointer + self::$columns[self::AREA_CODE][$this->type]);
     }
@@ -1215,15 +1334,15 @@ class Database {
    */
   private function readWeatherStationNameAndCode($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $weatherStationName = self::INVALID_IP_ADDRESS;
       $weatherStationCode = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::WEATHER_STATION_NAME][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $weatherStationName = self::FIELD_NOT_SUPPORTED;
       $weatherStationCode = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read weather station name and code
+      // Read weather station name and code
       $weatherStationName = $this->readString($pointer + self::$columns[self::WEATHER_STATION_NAME][$this->type]);
       $weatherStationCode = $this->readString($pointer + self::$columns[self::WEATHER_STATION_CODE][$this->type]);
     }
@@ -1239,17 +1358,17 @@ class Database {
    */
   private function readMccMncAndMobileCarrierName($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $mcc               = self::INVALID_IP_ADDRESS;
       $mnc               = self::INVALID_IP_ADDRESS;
       $mobileCarrierName = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::MCC][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $mcc               = self::FIELD_NOT_SUPPORTED;
       $mnc               = self::FIELD_NOT_SUPPORTED;
       $mobileCarrierName = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read MCC, MNC, and mobile carrier name
+      // Read MCC, MNC, and mobile carrier name
       $mcc               = $this->readString($pointer + self::$columns[self::MCC][$this->type]);
       $mnc               = $this->readString($pointer + self::$columns[self::MNC][$this->type]);
       $mobileCarrierName = $this->readString($pointer + self::$columns[self::MOBILE_CARRIER_NAME][$this->type]);
@@ -1266,13 +1385,13 @@ class Database {
    */
   private function readElevation($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $elevation = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::ELEVATION][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $elevation = self::FIELD_NOT_SUPPORTED;
     } else {
-      // read the elevation
+      // Read the elevation
       $elevation = $this->readString($pointer + self::$columns[self::ELEVATION][$this->type]);
     }
     return $elevation;
@@ -1287,10 +1406,10 @@ class Database {
    */
   private function readUsageType($pointer) {
     if (false === $pointer) {
-      // deal with invalid IPs
+      // Deal with invalid IPs
       $usageType = self::INVALID_IP_ADDRESS;
     } elseif (0 === self::$columns[self::USAGE_TYPE][$this->type]) {
-      // if the field is not suported, return accordingly
+      // If the field is not suported, return accordingly
       $usageType = self::FIELD_NOT_SUPPORTED;
     } else {
       $usageType = $this->readString($pointer + self::$columns[self::USAGE_TYPE][$this->type]);
@@ -1312,10 +1431,10 @@ class Database {
    */
   private function readIp($version, $pos) {
     if (4 === $version) {
-      // read a standard PHP int
+      // Read a standard PHP int
       return self::wrap32($this->readWord($pos));
     } elseif (6 === $version) {
-      // read as BCMath int (quad)
+      // Read as BCMath int (quad)
       return $this->readQuad($pos);
     } else {
       // unrecognized
@@ -1348,7 +1467,7 @@ class Database {
     while ($low <= $high) {
       // be careful with midpoint calculation
       $mid     = (int) ($low + (($high - $low) / 2));
-      // read IP ranges to get boundaries
+      // Read IP ranges to get boundaries
       $ip_from = $this->readIp($version, $base + $width * $mid);
       $ip_to   = $this->readIp($version, $base + $width * ($mid + 1));
 
@@ -1416,10 +1535,8 @@ class Database {
   }
 
   /**
-   * This function will look the given IP address up in the database and return the results asked for
+   * This function will look the given IP address up in the database and return the result(s) asked for
    *
-   * This function will return false if the given IP address is either malformed or
-   * not found in the database.
    * If a single, SINGULAR, field is specified, only its mapped value is returned.
    * If many fields are given (as an array) or a MULTIPLE field is specified, an
    * array whith the returned singular field names as keys and their corresponding
@@ -1431,54 +1548,55 @@ class Database {
    * @param boolean $asNamed  Whether to return an associative array instead
    * @return mixed|array|boolean
    */
-  public function lookup($ip, $fields = self::ALL, $asNamed = true) {
+  public function lookup($ip, $fields = null, $asNamed = true) {
     // extract IP version and number
     list($ipVersion, $ipNumber) = self::ipVersionAndNumber($ip);
-    // if the IP was invalid, return false
-    if (false === $ipVersion) {
-      return false;
-    }
-
     // perform the binary search proper (if the IP address was invalid, binSearch will return false)
     $pointer = $this->binSearch($ipVersion, $ipNumber);
-    if (false === $pointer) {
-      return false;
+
+    // apply defaults if needed
+    if (null === $fields) {
+      $fields = $this->defaultFields;
     }
 
-    // expand ALL to the list of (extended) fields to look up
-    if (self::ALL === $fields) {
-      $fields = [
-          self::COUNTRY,
-          self::REGION_NAME,
-          self::CITY_NAME,
-          self::COORDINATES,
-          self::ISP,
-          self::DOMAIN_NAME,
-          self::ZIP_CODE,
-          self::TIME_ZONE,
-          self::NET_SPEED,
-          self::IDD_AREA,
-          self::WEATHER_STATION,
-          self::MCC_MNC_MOBILE_CARRIER_NAME,
-          self::ELEVATION,
-          self::USAGE_TYPE,
-          self::IP_ADDRESS,
-          self::IP_VERSION,
-          self::IP_NUMBER,
-      ];
-    } elseif (in_array($fields, [self::COUNTRY, self::COORDINATES, self::WEATHER_STATION, self::MCC_MNC_MOBILE_CARRIER_NAME])) {
-      // force aray reply on these MULTIPLE fields
-      $fields = (array) $fields;
+    // turn fields into an array in case it wasn't already
+    $ifields = (array) $fields;
+    // add fields if needed
+    if (in_array(self::ALL, $ifields)) {
+      $ifields[] = self::REGION_NAME;
+      $ifields[] = self::CITY_NAME;
+      $ifields[] = self::ISP;
+      $ifields[] = self::DOMAIN_NAME;
+      $ifields[] = self::ZIP_CODE;
+      $ifields[] = self::TIME_ZONE;
+      $ifields[] = self::NET_SPEED;
+      $ifields[] = self::ELEVATION;
+      $ifields[] = self::USAGE_TYPE;
+      //
+      $ifields[] = self::COUNTRY;
+      $ifields[] = self::COORDINATES;
+      $ifields[] = self::IDD_AREA;
+      $ifields[] = self::WEATHER_STATION;
+      $ifields[] = self::MCC_MNC_MOBILE_CARRIER_NAME;
+      //
+      $ifields[] = self::IP_ADDRESS;
+      $ifields[] = self::IP_VERSION;
+      $ifields[] = self::IP_NUMBER;
     }
+    // turn into a uniquely-valued array the fast way
+    // (see: http://php.net/manual/en/function.array-unique.php#77743)
+    $afields = array_keys(array_flip($ifields));
+    // sorting them in reverse order warrants that by the time we get to
+    // SINGULAR fields, its MULTIPLE counterparts, if at all present, have
+    // already been retrieved
+    rsort($afields);
 
     // maintain a list of already retrieved fields to avoid doing it twice
     $done    = [
-        self::COUNTRY                     => false,
         self::COUNTRY_CODE                => false,
         self::COUNTRY_NAME                => false,
         self::REGION_NAME                 => false,
         self::CITY_NAME                   => false,
-        self::COORDINATES                 => false,
         self::LATITUDE                    => false,
         self::LONGITUDE                   => false,
         self::ISP                         => false,
@@ -1486,11 +1604,22 @@ class Database {
         self::ZIP_CODE                    => false,
         self::TIME_ZONE                   => false,
         self::NET_SPEED                   => false,
+        self::IDD_CODE                    => false,
+        self::AREA_CODE                   => false,
+        self::WEATHER_STATION_CODE        => false,
+        self::WEATHER_STATION_NAME        => false,
+        self::MCC                         => false,
+        self::MNC                         => false,
+        self::MOBILE_CARRIER_NAME         => false,
+        self::ELEVATION                   => false,
+        self::USAGE_TYPE                  => false,
+        //
+        self::COUNTRY                     => false,
+        self::COORDINATES                 => false,
         self::IDD_AREA                    => false,
         self::WEATHER_STATION             => false,
         self::MCC_MNC_MOBILE_CARRIER_NAME => false,
-        self::ELEVATION                   => false,
-        self::USAGE_TYPE                  => false,
+        //
         self::IP_ADDRESS                  => false,
         self::IP_VERSION                  => false,
         self::IP_NUMBER                   => false,
@@ -1498,15 +1627,12 @@ class Database {
     // results are empty to begin with
     $results = [];
 
-    // treat the fields to look retrieve as an array one way or another
-    $ifields = (array) $fields;
-    // sorting them in reverse order warrants that by the time we get to
-    // SINGULAR fields, its MULTIPLE counterparts, if at all present, have
-    // already been retrieved
-    rsort($ifields);
     // treat each field in turn
-    foreach ($ifields as $ifield) {
-      switch ($ifield) {
+    foreach ($afields as $afield) {
+      switch ($afield) {
+        // purposefully ignore self::ALL, we already dealt with it
+        case self::ALL: break;
+        //
         case self::COUNTRY:
           if (!$done[self::COUNTRY]) {
             list($results[self::COUNTRY_NAME], $results[self::COUNTRY_CODE]) = $this->readCountryNameAndCode($pointer);
@@ -1690,14 +1816,13 @@ class Database {
           break;
         //
         default:
-          $results[$ifield] = self::FIELD_NOT_KNOWN;
+          $results[$afield] = self::FIELD_NOT_KNOWN;
       }
     }
 
-    // if the user requested a single field, just return it
-    if (!is_array($fields)) {
-      return $results[$fields];
-    } else {
+    // If we were asked for an array, or we have multiple results to return...
+    if (is_array($fields) || count($results) > 1) {
+      // return array
       if ($asNamed) {
         // apply translations if needed
         $return = [];
@@ -1712,6 +1837,9 @@ class Database {
       } else {
         return $results;
       }
+    } else {
+      // return a single value
+      return array_values($results)[0];
     }
   }
 

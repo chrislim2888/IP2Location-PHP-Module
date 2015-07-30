@@ -1,5 +1,24 @@
 Revision History for PHP Module for IP2Location
 
+7.2.2 Thu Jul 30 10:27:55 2015
+	* Fixes:
+
+	- Defended against 32 bit overflow in a couple more places.
+	- Added checks for default / unset / infinite memory limits.
+	- Fixed lookup function, in order for it to consistently return the correct datatype.
+
+
+	* Enhancements:
+
+	- Cached the result of the memory limit calculation in order not to recheck it for each instantiation.
+
+
+	* Additions:
+	
+	- Added exception code constants to ease the handling of exceptional conditions in the client.
+	- Added the ability to set default returned fields on construction, in order not to have to pass them around constantly.
+
+
 7.2.0 Wed Jul 29 14:07:23 2015
 	**Special thanks to Mariano (mariano.perez.rodriguez [at] gmail.com) for working on this release**
 	
