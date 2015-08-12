@@ -19,7 +19,7 @@
  *
  */
 
-namespace Ip2Location;
+namespace IP2Location;
 
 /**
  * IP2Location database class
@@ -32,7 +32,7 @@ class Database {
    *
    * @var string
    */
-  const VERSION = '7.2.2';
+  const VERSION = '7.2.3';
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -975,8 +975,7 @@ class Database {
    */
   private static function ipVersionAndNumber($ip) {
     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-      // Use bin2hex + base_convert to deal with normal PHP ints
-      return [4, (int) base_convert(bin2hex(inet_pton($ip)), 16, 10)];
+      return [4, sprintf('%u', ip2long($ip))];
     } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
       // Use bcBin2Dec to deal with BCMath ints
       return [6, self::bcBin2Dec(inet_pton($ip))];
