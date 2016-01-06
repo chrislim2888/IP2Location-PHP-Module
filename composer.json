@@ -1,6 +1,6 @@
 {
     "name": "ip2location/ip2location-php",
-    "description": "IP2Location PHP API to get location info from IPv4 and IPv6 address.",
+    "description": "[Official Release] IP2Location PHP API to get location info from IPv4 and IPv6 address.",
     "keywords": ["ip2location", "ip2locationlite", "geolocation"],
     "homepage": "http://www.ip2location.com",
     "type": "library",
