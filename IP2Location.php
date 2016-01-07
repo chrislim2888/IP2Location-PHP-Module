@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (C) 2005-2015 IP2Location.com
+ * Copyright (C) 2005-2016 IP2Location.com
  * All Rights Reserved
  *
  * This library is free software: you can redistribute it and/or
@@ -32,7 +32,7 @@ class Database {
    *
    * @var string
    */
-  const VERSION = '7.2.3';
+  const VERSION = '7.2.4';
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -977,8 +977,13 @@ class Database {
     if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
       return [4, sprintf('%u', ip2long($ip))];
     } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-      // Use bcBin2Dec to deal with BCMath ints
-      return [6, self::bcBin2Dec(inet_pton($ip))];
+	  $result = 0;
+
+	  foreach (str_split(bin2hex(inet_pton($ip)), 8) as $word) {
+        $result = bcadd(bcmul($result, '4294967296', 0), self::wrap32(hexdec($word)), 0);
+      }
+
+	  return [6, $result];
     } else {
       // Invalid IP address, return falses
       return [false, false];
@@ -994,13 +999,19 @@ class Database {
    * @return string
    */
   private static function bcBin2Dec($data) {
-    $result = '0';
-    // At each step, take a 32 bit hex value, get its decimal equivalent,
-    // and add it to the result of multiplying the accumulated result by
-    // 2^32 (to "move" it a word's worth)
-    foreach (str_split(bin2hex($data), 8) as $word) {
-      $result = bcadd(bcmul($result, '4294967296', 0), self::wrap32(hexdec($word)), 0);
-    }
+	$parts = array(
+		unpack('V', substr($data, 12, 4)),
+		unpack('V', substr($data, 8, 4)),
+		unpack('V', substr($data, 4, 4)),
+		unpack('V', substr($data, 0, 4)),
+	);
+
+	foreach($parts as &$part)
+		if($part[1] < 0)
+			$part[1] += 4294967296;
+
+	$result = bcadd(bcadd(bcmul($parts[0][1], bcpow(4294967296, 3)), bcmul($parts[1][1], bcpow(4294967296, 2))), bcadd(bcmul($parts[2][1], 4294967296), $parts[3][1]));
+
     return $result;
   }
 
@@ -1464,9 +1475,9 @@ class Database {
 
     // as long as we can narrow down the search...
     while ($low <= $high) {
-      // be careful with midpoint calculation
       $mid     = (int) ($low + (($high - $low) / 2));
-      // Read IP ranges to get boundaries
+
+	  // Read IP ranges to get boundaries
       $ip_from = $this->readIp($version, $base + $width * $mid);
       $ip_to   = $this->readIp($version, $base + $width * ($mid + 1));
 
