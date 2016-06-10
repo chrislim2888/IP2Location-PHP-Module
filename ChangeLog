@@ -1,4 +1,8 @@
 Revision History for PHP Module for IP2Location
+7.2.5 Fri Jun 10 15:40:23 2016
+	* Fixes:
+	
+	- Fix the IP lookup issue for DB24
 
 7.2.4 Wed Jan 06 14:44:23 2016
 	* Fixes:

@@ -32,7 +32,7 @@ class Database {
    *
    * @var string
    */
-  const VERSION = '7.2.4';
+  const VERSION = '7.2.5';
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -741,7 +741,7 @@ class Database {
     $this->date           = date('Y-m-d', strtotime("{$year}-{$month}-{$day}"));
     //
     $this->ipCount[4]     = $this->readWord(6);
-    $this->ipBase[4]      = $this->readByte(10);
+    $this->ipBase[4]      = $this->readWord(10);
     $this->ipCount[6]     = $this->readWord(14);
     $this->ipBase[6]      = $this->readWord(18);
   }
