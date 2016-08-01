@@ -1,4 +1,9 @@
 Revision History for PHP Module for IP2Location
+8.0.1 Tue Aug 1 11:00:00 2016
+	* Fixes
+	
+	- Support 2 new interfaces: getDatabaseVersion and getModuleVersion 
+
 8.0.0 Tue Jul 5 10:00:00 2016
 	* Fixes
 	

@@ -32,7 +32,7 @@ class Database {
    *
    * @var string
    */
-  const VERSION = '8.0.0';
+  const VERSION = '8.0.1';
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -613,6 +613,9 @@ class Database {
   
   //hjlim
   private $indexBaseAddr = [];
+  private $year;
+  private $month;
+  private $day;
   
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Default fields  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -739,10 +742,10 @@ class Database {
     $this->offset[4]      = -4;
     $this->offset[6]      = 8;
     //
-    $year                 = 2000 + $this->readByte(3);
-    $month                = $this->readByte(4);
-    $day                  = $this->readByte(5);
-    $this->date           = date('Y-m-d', strtotime("{$year}-{$month}-{$day}"));
+    $this->year                 = 2000 + $this->readByte(3);
+    $this->month                = $this->readByte(4);
+    $this->day                  = $this->readByte(5);
+    $this->date           = date('Y-m-d', strtotime("{$this->year}-{$this->month}-{$this->day}"));
     //
     $this->ipCount[4]     = $this->readWord(6);
     $this->ipBase[4]      = $this->readWord(10);		//hjlim readword
@@ -1575,6 +1578,20 @@ class Database {
     }
   }
 
+  /**
+   * Return the version of module
+   */
+  public function getModuleVersion() {
+	return self::VERSION;
+  }
+  
+  /**
+   * Return the version of module
+   */
+  public function getDatabaseVersion() {
+	return $this->year . '.' . $this->month . '.' . $this->day;
+  }
+  
   /**
    * This function will look the given IP address up in the database and return the result(s) asked for
    *
