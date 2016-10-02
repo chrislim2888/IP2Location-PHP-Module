@@ -1,4 +1,9 @@
 Revision History for PHP Module for IP2Location
+8.0.2 Sun Oct 1 10:01:00 2016
+	* Fixes
+	
+	- Issue of shift operator for big number in php
+
 8.0.1 Tue Aug 1 11:00:00 2016
 	* Fixes
 	

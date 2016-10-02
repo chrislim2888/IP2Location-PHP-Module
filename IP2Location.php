@@ -32,7 +32,7 @@ class Database {
    *
    * @var string
    */
-  const VERSION = '8.0.1';
+  const VERSION = '8.0.2';
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1488,7 +1488,7 @@ class Database {
 		$indexPos = 0;
 		switch($version){
 			case 4:
-				$ipNum1_2 = intval($ipNumber >> 16);
+				$ipNum1_2 = intval($ipNumber / 65536);
 				$indexPos = $indexBaseStart + ($ipNum1_2 << 3);
 				
 				break;
