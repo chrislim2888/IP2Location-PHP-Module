@@ -1740,9 +1740,9 @@ class Database {
           }
           break;
         case self::COUNTRY_NAME:
-          if (!$done[self::COUNTRY_CODE]) {
-            $results[self::COUNTRY_CODE] = $this->readCountryNameAndCode($pointer)[0];
-            $done[self::COUNTRY_CODE]    = true;
+          if (!$done[self::COUNTRY_NAME]) {
+            $results[self::COUNTRY_NAME] = $this->readCountryNameAndCode($pointer)[0];
+            $done[self::COUNTRY_NAME]    = true;
           }
           break;
         case self::REGION_NAME:
