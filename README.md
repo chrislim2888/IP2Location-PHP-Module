@@ -21,7 +21,7 @@ The database will be updated in monthly basis for the greater accuracy. Free sam
 The complete database is available at http://www.ip2location.com under Premium subscription package. This module also support IP2Location IPv6 version.
 
 
-INSTALLATION
+## INSTALLATION
 
 To install this module, unzip the package and copy the following files to your web folder.
 * IP2Location.php
@@ -33,11 +33,14 @@ To test this installation, please browse example.php using web browser.
 
 
 
-DEPENDENCIES
+## DEPENDENCIES (IP2LOCATION BIN DATA FILE)
 
-The complete database is available at http://www.ip2location.com under subscription package.
+This library requires IP2Location BIN data file to function. You may download the BIN data file at
+* IP2Location LITE BIN Data (Free): http://lite.ip2location.com
+* IP2Location Commercial BIN Data (Comprehensive): http://www.ip2location.com
 
+## COPYRIGHT AND LICENCE
 
-COPYRIGHT AND LICENCE
+Copyright (C) 2005-2015 by IP2Location.com
 
-Copyright (C) 2005-2015 by IP2Location.com, support@ip2location.com
+License under LGPLv3
