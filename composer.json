@@ -6,7 +6,9 @@
     "type": "library",
     "license": "LGPLv3",
     "autoload": {
-        "classmap": ["IP2Location.php"]
+        "psr-4": {
+            "IP2Location\\": ""
+        }
     },
     "authors": [
         {
