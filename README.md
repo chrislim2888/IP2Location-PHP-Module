@@ -1,5 +1,6 @@
 IP2Location (PHP Module)
 ========================
+[![Latest Stable Version](https://img.shields.io/packagist/v/ip2location/ip2location-php.svg)](https://packagist.org/packages/ip2location/ip2location-php)
 [![Total Downloads](https://img.shields.io/packagist/dt/ip2location/ip2location-php.svg?style=flat-square)](https://packagist.org/packages/ip2location/ip2location-php)  
 
 *This is the official release maintained by IP2Location.com*
