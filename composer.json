@@ -4,7 +4,7 @@
     "keywords": ["ip2location", "ip2locationlite", "geolocation"],
     "homepage": "http://www.ip2location.com",
     "type": "library",
-    "license": "LGPLv3",
+    "license": "MIT",
     "autoload": {
         "classmap": ["IP2Location.php"]
     },

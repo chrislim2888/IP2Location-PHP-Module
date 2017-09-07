@@ -55,6 +55,6 @@ An outdated BIN database was provided in the databases folder for your testing. 
 
 ## COPYRIGHT AND LICENCE
 
-Copyright (C) 2005-2015 by IP2Location.com
+Copyright (C) 2005-2017 by IP2Location.com
 
-License under LGPLv3
+License under MIT
