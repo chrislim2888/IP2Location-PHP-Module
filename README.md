@@ -21,7 +21,6 @@ The database will be updated in monthly basis for the greater accuracy. Free sam
 
 The complete database is available at http://www.ip2location.com under Premium subscription package. This module also support IP2Location IPv6 version.
 
-
 ## INSTALLATION
 
 To install this module, unzip the package and copy the following files to your web folder.
@@ -52,6 +51,12 @@ This library requires IP2Location BIN data file to function. You may download th
 * IP2Location Commercial BIN Data (Comprehensive): http://www.ip2location.com
 
 An outdated BIN database was provided in the databases folder for your testing. You are recommended to visit the above links to download the latest BIN database.
+
+## OTHER FRAMEWORK LIBRARY
+Below are the list of other framework library that you can install and use right away.
+* [IP2Location Laravel](https://github.com/ip2location/ip2location-laravel)
+* [IP2Location CakePHP](https://github.com/ip2location/ip2location-cakephp)
+* [IP2Location CodeIgniter](https://github.com/ip2location/codeigniter-ip2location)
 
 ## COPYRIGHT AND LICENCE
 
