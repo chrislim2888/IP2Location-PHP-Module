@@ -17,9 +17,17 @@ This module can be used in many types of projects such as:
 6. prevent password sharing and abuse of service 
 7. geotargeting in advertisement
 
-The database will be updated in monthly basis for the greater accuracy. Free sample database is available at /samples directory or download it from http://www.ip2location.com/developers.
+Free IP2Location LITE and commerical databases are available for download. 
+* LITE database is available at https://lite.ip2location.com (Free with limited accuracy)
+* Commercial database is availabe at https://www.ip2location.com (Comprehensive with high accuracy)
 
-The complete database is available at http://www.ip2location.com under Premium subscription package. This module also support IP2Location IPv6 version.
+Monthly update is available for both IP2Location LITE and commercial database.
+
+## KEY FEATURES
+
+1. **Support both IPv4 and IPv6 with ease.** If you would like to enable IPv6 support, you just need to replace your BIN file with IPv6 version. That's it, and no code modification needed.
+2. **Extensible.** If you require different granularity of IP information, you can visit [IP2Location.com](https://www.ip2location.com/databases) to download the relevant BIN file, and the information will made ready for you.
+3. **Comprehensive Information.** There are more than 13 types of information that you can retrieve from an IP address. Please visit [IP2Location.com](https://www.ip2location.com/databases) for details.
 
 ## INSTALLATION
 
