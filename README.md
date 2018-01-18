@@ -60,6 +60,10 @@ This library requires IP2Location BIN data file to function. You may download th
 
 An outdated BIN database was provided in the databases folder for your testing. You are recommended to visit the above links to download the latest BIN database.
 
+## IPv4 BIN vs IPv6 BIN
+* Use the IPv4 BIN file if you just need to query IPv4 addresses.
+* Use the IPv6 BIN file if you need to query BOTH IPv4 and IPv6 addresses.
+
 ## OTHER FRAMEWORK LIBRARY
 Below are the list of other framework library that you can install and use right away.
 * [IP2Location Laravel](https://github.com/ip2location/ip2location-laravel)
