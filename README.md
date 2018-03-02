@@ -55,8 +55,8 @@ Below is the description of the functions available in this class
 ## DEPENDENCIES (IP2LOCATION BIN DATA FILE)
 
 This library requires IP2Location BIN data file to function. You may download the BIN data file at
-* IP2Location LITE BIN Data (Free): http://lite.ip2location.com
-* IP2Location Commercial BIN Data (Comprehensive): http://www.ip2location.com
+* IP2Location LITE BIN Data (Free): https://lite.ip2location.com
+* IP2Location Commercial BIN Data (Comprehensive): https://www.ip2location.com
 
 An outdated BIN database was provided in the databases folder for your testing. You are recommended to visit the above links to download the latest BIN database.
 
@@ -72,6 +72,6 @@ Below are the list of other framework library that you can install and use right
 
 ## COPYRIGHT AND LICENCE
 
-Copyright (C) 2005-2017 by IP2Location.com
+Copyright (C) 2005-2018 by IP2Location.com
 
 License under MIT
