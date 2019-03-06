@@ -609,14 +609,14 @@ class Database {
    * @var array
    */
   private $ipBase = [];
-  
-  
+
+
   //hjlim
   private $indexBaseAddr = [];
   private $year;
   private $month;
   private $day;
-  
+
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //  Default fields  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1469,7 +1469,7 @@ class Database {
    * @param int $ipNumber  IP number to look for
    * @return int|boolean
    */
-  private function binSearch($version, $ipNumber) {
+  private function binSearch($version, $ipNumber, $cidr=false) {
     if (false === $version) {
       // unrecognized version
       return false;
@@ -1490,35 +1490,35 @@ class Database {
 			case 4:
 				$ipNum1_2 = intval($ipNumber / 65536);
 				$indexPos = $indexBaseStart + ($ipNum1_2 << 3);
-				
+
 				break;
-			
+
 			case 6:
 				$ipNum1 = intval(bcdiv($ipNumber, bcpow('2', '112')));
 				$indexPos = $indexBaseStart + ($ipNum1 << 3);
 
 				break;
-				
+
 			default:
 				return false;
 		}
-		
+
 		$low = $this->readWord($indexPos);
 		$high = $this->readWord($indexPos + 4);
 	}
-	
+
     // as long as we can narrow down the search...
 	while ($low <= $high) {
       $mid     = (int) ($low + (($high - $low) >> 1));
-		
+
 	  // Read IP ranges to get boundaries
       $ip_from = $this->readIp($version, $base + $width * $mid);
       $ip_to   = $this->readIp($version, $base + $width * ($mid + 1));
-    
+
       // determine whether to return, repeat on the lower half, or repeat on the upper half
       switch (self::ipBetween($version, $ipNumber, $ip_from, $ip_to)) {
         case 0:
-		  return $base + $offset + $mid * $width;
+          return ($cidr) ? array($ip_from, $ip_to) : $base + $offset + $mid * $width;
         case -1:
           $high = $mid - 1;
           break;
@@ -1584,14 +1584,14 @@ class Database {
   public function getModuleVersion() {
 	return self::VERSION;
   }
-  
+
   /**
    * Return the version of module
    */
   public function getDatabaseVersion() {
 	return $this->year . '.' . $this->month . '.' . $this->day;
   }
-  
+
   /**
    * This function will look the given IP address up in the database and return the result(s) asked for
    *
@@ -1611,6 +1611,7 @@ class Database {
     list($ipVersion, $ipNumber) = self::ipVersionAndNumber($ip);
     // perform the binary search proper (if the IP address was invalid, binSearch will return false)
     $pointer = $this->binSearch($ipVersion, $ipNumber);
+    if(empty($pointer)) { return false; }
 
     // apply defaults if needed
     if (null === $fields) {
@@ -1899,6 +1900,30 @@ class Database {
       // return a single value
       return array_values($results)[0];
     }
+  }
+
+  /**
+   * For a given IP address, returns the cidr of his sub-network.
+   *
+   * For example, calling get_cidr('91.200.12.233') returns '91.200.0.0/13'.
+   * Useful to setup "Deny From 91.200.0.0/13" in .htaccess file for Apache2
+   * server against spam.
+   * */
+  public function get_cidr($ip) {
+    // extract IP version and number
+    list($ipVersion, $ipNumber) = self::ipVersionAndNumber($ip);
+    // perform the binary search proper (if the IP address was invalid, binSearch will return false)
+    $resp = $this->binSearch($ipVersion, $ipNumber, true);
+    if(!empty($resp)) {
+      list($ip_from, $ip_to) = $resp;
+      $i=32; $mask=1;
+      while(($ip_to & $mask) == 0) {
+        $mask *= 2; $i--;
+      }
+      $ip = long2ip($ip_from);
+      return "$ip/$i";
+    }
+    return false;
   }
 
 }
