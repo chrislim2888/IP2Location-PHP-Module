@@ -34,8 +34,7 @@ Monthly update is available for both IP2Location LITE and commercial database.
 To install this module, unzip the package and copy the following files to your web folder.
 * IP2Location.php
 * example.php
-* databases/IP-COUNTRY-SAMPLE.BIN
-* databases/IPV6-COUNTRY-SAMPLE.BIN
+* databases/IP2LOCATION-LITE-DB1.BIN
  
 To test this installation, please browse example.php using web browser.
 

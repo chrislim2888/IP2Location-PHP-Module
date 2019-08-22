@@ -4,13 +4,13 @@ require_once 'IP2Location.php';
    Cache whole database into system memory and share among other scripts & websites
    WARNING: Please make sure your system have sufficient RAM to enable this feature
 */
-// $db = new \IP2Location\Database('./databases/IP-COUNTRY-SAMPLE.BIN', \IP2Location\Database::SHARED_MEMORY);
+// $db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::SHARED_MEMORY);
 
 /*
    Cache the database into memory to accelerate lookup speed
    WARNING: Please make sure your system have sufficient RAM to enable this feature
 */
-// $db = new \IP2Location\Database('./databases/IP-COUNTRY-SAMPLE.BIN', \IP2Location\Database::MEMORY_CACHE);
+// $db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::MEMORY_CACHE);
 
 
 /*
