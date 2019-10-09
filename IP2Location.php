@@ -1084,7 +1084,7 @@ class Database {
    */
   private function readFloat($pos) {
     // Unpack a float's size worth of data
-    return unpack('f', $this->read($pos - 1, self::$floatSize))[1];
+    return unpack('f', substr($this->raw_positions_row, $pos, self::$floatSize))[1];
   }
 
   /**
@@ -1214,8 +1214,8 @@ class Database {
       $longitude = self::FIELD_NOT_SUPPORTED;
     } else {
       // Read latitude and longitude
-      $latitude  = $this->readFloat($pointer + self::$columns[self::LATITUDE][$this->type]);
-      $longitude = $this->readFloat($pointer + self::$columns[self::LONGITUDE][$this->type]);
+      $latitude  = round($this->readFloat(self::$columns[self::LATITUDE][$this->type]), 6);
+      $longitude = round($this->readFloat(self::$columns[self::LONGITUDE][$this->type]), 6);
     }
     return [$latitude, $longitude];
   }
