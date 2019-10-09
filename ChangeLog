@@ -1,4 +1,14 @@
 Revision History for PHP Module for IP2Location
+8.1.1 Wed Oct 09 08:58:00 2019
+	* Fixes
+	
+	- Reduce file I/O to improve query performance.
+	
+8.1.0 Mon Sep 30 08:58:00 2019
+	* Fixes
+	
+	- Optimized library performance.
+
 8.0.2 Sun Oct 1 10:01:00 2016
 	* Fixes
 	
