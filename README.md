@@ -35,14 +35,14 @@ To install this module, unzip the package and copy the following files to your w
 * IP2Location.php
 * example.php
 * databases/IP2LOCATION-LITE-DB1.BIN
- 
+
 To test this installation, please browse example.php using web browser.
 
 ## USAGE
 
-Below is the description of the functions available in this class
+Below is the description of the functions available in the **Database** class.
 
-| Function Name | Descripton |
+| Function Name | Description |
 |---|---|
 |Constructor|Expect 2 input parameters:<ol><li>Full path of IP2Location BIN data file.</li><li>File Open Mode<ul><li>	SHARED_MEMORY</li><li>MEMORY_CACHE</li><li>FILE_IO</li></ul></li></ol>For SHARED_MEMORY and MEMORY_CACHE, it will require your server to have sufficient memory to hold the BIN data, otherwise it will raise the errors during the object initialization.|
 |getDate|Return the database's compilation date as a string of the form 'YYYY-MM-DD'|
@@ -51,13 +51,27 @@ Below is the description of the functions available in this class
 |getDatabaseVersion|Return the version of database|
 |lookup|Return the IP information in array. Below is the information returned:<ul><li>ipNumber</li><li>ipVersion</li><li>ipAddress</li><li>countryCode</li><li>countryName</li><li>regionName</li><li>cityName</li><li>latitude</li><li>longitude</li><li>areaCode</li><li>iddCode</li><li>weatherStationCode</li><li>weatherStationName</li><li>mcc</li><li>mnc</li><li>mobileCarrierName</li><li>usageType</li><li>elevation</li><li>netSpeed</li><li>timeZone</li><li>zipCode</li><li>domainName</li><li>isp</li></ul>You can visit [IP2Location](https://www.ip2location.com/databases/db24-ip-country-region-city-latitude-longitude-zipcode-timezone-isp-domain-netspeed-areacode-weather-mobile-elevation-usagetype) for the description of each field. Note: although the above names are not exactly matched with the names given in this link, but they are self-described.|
 
-## DEPENDENCIES (IP2LOCATION BIN DATA FILE)
+
+
+Below is the description of the functions available in the **WebService** class.
+
+| Function Name | Description                                                  |
+| ------------- | ------------------------------------------------------------ |
+| Constructor   | Expect 3 input parameters:<ol><li>IP2Location API Key.</li><li>Package (WS1 - WS24)</li><li>Use HTTPS or HTTP</li></ol> |
+| lookup        | Return the IP information in array.                          |
+| getCredit     | Return remaining credit of the web service account.          |
+
+
+
+## DEPENDENCIES
 
 This library requires IP2Location BIN data file to function. You may download the BIN data file at
 * IP2Location LITE BIN Data (Free): https://lite.ip2location.com
 * IP2Location Commercial BIN Data (Comprehensive): https://www.ip2location.com
 
 An outdated BIN database was provided in the databases folder for your testing. You are recommended to visit the above links to download the latest BIN database.
+
+You can also sign up for [IP2Location Web Service](https://www.ip2location.com/web-service/ip2location) to lookup by IP2Location API.
 
 ## IPv4 BIN vs IPv6 BIN
 * Use the IPv4 BIN file if you just need to query IPv4 addresses.
@@ -71,6 +85,6 @@ Below are the list of other framework library that you can install and use right
 
 ## COPYRIGHT AND LICENCE
 
-Copyright (C) 2005-2018 by IP2Location.com
+Copyright (C) 2005-2020 by IP2Location.com
 
 License under MIT

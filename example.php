@@ -1,10 +1,11 @@
 <?php
+
 require_once 'IP2Location.php';
 /*
    Cache whole database into system memory and share among other scripts & websites
    WARNING: Please make sure your system have sufficient RAM to enable this feature
 */
-// $db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::SHARED_MEMORY);
+//$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::SHARED_MEMORY);
 
 /*
    Cache the database into memory to accelerate lookup speed
@@ -12,10 +13,7 @@ require_once 'IP2Location.php';
 */
 // $db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::MEMORY_CACHE);
 
-
-/*
-	Default file I/O lookup
-*/
+// Default file I/O lookup
 $db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::FILE_IO);
 
 $records = $db->lookup('8.8.8.8', \IP2Location\Database::ALL);
@@ -45,4 +43,15 @@ echo 'ZIP Code              : ' . $records['zipCode'] . "\n";
 echo 'Domain Name           : ' . $records['domainName'] . "\n";
 echo 'ISP Name              : ' . $records['isp'] . "\n";
 echo '</pre>';
-?>
+
+// Web Service
+$ws = new \IP2Location\WebService('demo', 'WS24', false);
+$records = $ws->lookup('8.8.8.8', [
+	'continent', 'country', 'region', 'city', 'geotargeting', 'country_groupings', 'time_zone_info',
+], 'en');
+
+echo '<pre>';
+print_r($records);
+
+echo 'Credit Remaining: ' . $ws->getCredit() . "\n";
+echo '</pre>';
