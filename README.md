@@ -40,6 +40,9 @@ To test this installation, please browse example.php using web browser.
 
 ## USAGE
 
+You can check the **example.php** file to learn more about usage.
+
+### Database Class
 Below is the description of the functions available in the **Database** class.
 
 | Function Name | Description |
@@ -52,7 +55,7 @@ Below is the description of the functions available in the **Database** class.
 |lookup|Return the IP information in array. Below is the information returned:<ul><li>ipNumber</li><li>ipVersion</li><li>ipAddress</li><li>countryCode</li><li>countryName</li><li>regionName</li><li>cityName</li><li>latitude</li><li>longitude</li><li>areaCode</li><li>iddCode</li><li>weatherStationCode</li><li>weatherStationName</li><li>mcc</li><li>mnc</li><li>mobileCarrierName</li><li>usageType</li><li>elevation</li><li>netSpeed</li><li>timeZone</li><li>zipCode</li><li>domainName</li><li>isp</li></ul>You can visit [IP2Location](https://www.ip2location.com/databases/db24-ip-country-region-city-latitude-longitude-zipcode-timezone-isp-domain-netspeed-areacode-weather-mobile-elevation-usagetype) for the description of each field. Note: although the above names are not exactly matched with the names given in this link, but they are self-described.|
 
 
-
+### WebService Class
 Below is the description of the functions available in the **WebService** class.
 
 | Function Name | Description                                                  |
