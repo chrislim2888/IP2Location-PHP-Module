@@ -31,7 +31,7 @@ class Database
 	 *
 	 * @var string
 	 */
-	public const VERSION = '8.2.0';
+	public const VERSION = '8.2.1';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1252,13 +1252,53 @@ class Database
 	/**
 	 * For a given IP address, returns the cidr of his sub-network.
 	 *
+	 * @param string $ip
+	 *
+	 * @return array
+	 * */
+	public function getCidr($ip)
+	{
+		// Extract IP version and number
+		list($ipVersion, $ipNumber) = self::ipVersionAndNumber($ip);
+
+		// Perform the binary search proper (if the IP address was invalid, binSearch will return false)
+		$records = $this->binSearch($ipVersion, $ipNumber, true);
+		if (!empty($records)) {
+			$result = [];
+
+			list($ipFrom, $ipTo) = $records;
+
+			while ($ipTo >= $ipFrom) {
+				$maxSize = self::getMaxSize($ipFrom, 32);
+				$x = log($ipTo - $ipFrom + 1) / log(2);
+				$maxDiff = floor(32 - floor($x));
+
+				$ip = long2ip($ipFrom);
+
+				if ($maxSize < $maxDiff) {
+					$maxSize = $maxDiff;
+				}
+
+				array_push($result, "$ip/$maxSize");
+				$ipFrom += pow(2, (32 - $maxSize));
+			}
+
+			return $result;
+		}
+
+		return false;
+	}
+
+	/**
+	 * For a given IP address, returns the cidr of his sub-network. (This function will be deprecated in next version)
+	 *
 	 * For example, calling get_cidr('91.200.12.233') returns '91.200.0.0/13'.
 	 * Useful to setup "Deny From 91.200.0.0/13" in .htaccess file for Apache2
 	 * server against spam.
 	 *
 	 * @param mixed $ip
 	 * */
-	public function getCidr($ip)
+	public function get_cidr($ip)
 	{
 		// Extract IP version and number
 		list($ipVersion, $ipNumber) = self::ipVersionAndNumber($ip);
@@ -1282,14 +1322,22 @@ class Database
 		return false;
 	}
 
-	public function get_cidr($ip)
-	{
-		return self::getCidr($ip);
-	}
-
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Static tools  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private static function getMaxSize($base, $bit) {
+		while ($bit > 0) {
+			$decimal = hexdec(base_convert((pow(2, 32) - pow(2, (32 - ($bit - 1)))), 10, 16));
+
+			if (($base & $decimal) != $base) {
+				break;
+			}
+			--$bit;
+		}
+
+		return $bit;
+	}
 
 	/**
 	 * Get memory limit from the current PHP settings (return false if no memory limit set).

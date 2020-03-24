@@ -44,6 +44,10 @@ echo 'Domain Name           : ' . $records['domainName'] . "\n";
 echo 'ISP Name              : ' . $records['isp'] . "\n";
 echo '</pre>';
 
+echo '<pre>
+CIDR: ' . implode(', ', $db->getCidr('8.8.8.8')) . '
+</pre>';
+
 // Web Service
 $ws = new \IP2Location\WebService('demo', 'WS24', false);
 $records = $ws->lookup('8.8.8.8', [
