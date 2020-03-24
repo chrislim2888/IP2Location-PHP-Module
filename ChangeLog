@@ -1,4 +1,9 @@
 Revision History for PHP Module for IP2Location
+8.2.1 Tue Mar 24 17:29:00 2020
+	* Fixes
+
+	- Fixed getCidr() function to return an array of subnet.
+
 8.2.0 Thu Mar 19 10:16:00 2020
 	* Fixes
 
