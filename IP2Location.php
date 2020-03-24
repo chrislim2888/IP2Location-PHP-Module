@@ -1290,7 +1290,7 @@ class Database
 	}
 
 	/**
-	 * For a given IP address, returns the cidr of his sub-network. (This function will be deprecated in next version)
+	 * For a given IP address, returns the cidr of his sub-network. (This function will be deprecated in next version).
 	 *
 	 * For example, calling get_cidr('91.200.12.233') returns '91.200.0.0/13'.
 	 * Useful to setup "Deny From 91.200.0.0/13" in .htaccess file for Apache2
@@ -1326,7 +1326,17 @@ class Database
 	//  Static tools  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	private static function getMaxSize($base, $bit) {
+	/**
+	 * Rerturn maxinum size of a net block.
+	 *
+	 * @param int $base the base number
+	 * @param int $bit  the bit number
+	 * @static
+	 *
+	 * @return bool|int
+	 */
+	private static function getMaxSize($base, $bit)
+	{
 		while ($bit > 0) {
 			$decimal = hexdec(base_convert((pow(2, 32) - pow(2, (32 - ($bit - 1)))), 10, 16));
 
