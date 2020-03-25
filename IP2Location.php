@@ -31,7 +31,7 @@ class Database
 	 *
 	 * @var string
 	 */
-	public const VERSION = '8.2.1';
+	public const VERSION = '8.2.2';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1268,6 +1268,8 @@ class Database
 
 			list($ipFrom, $ipTo) = $records;
 
+			$ipTo -= 1;
+
 			while ($ipTo >= $ipFrom) {
 				$maxSize = self::getMaxSize($ipFrom, 32);
 				$x = log($ipTo - $ipFrom + 1) / log(2);
@@ -1279,7 +1281,7 @@ class Database
 					$maxSize = $maxDiff;
 				}
 
-				array_push($result, "$ip/$maxSize");
+				$result[] = $ip . '/' . $maxSize;
 				$ipFrom += pow(2, (32 - $maxSize));
 			}
 
