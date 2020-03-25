@@ -53,7 +53,7 @@ Below is the description of the functions available in the **Database** class.
 |getModuleVersion|Return the version of module|
 |getDatabaseVersion|Return the version of database|
 |lookup|Return the IP information in array. Below is the information returned:<ul><li>ipNumber</li><li>ipVersion</li><li>ipAddress</li><li>countryCode</li><li>countryName</li><li>regionName</li><li>cityName</li><li>latitude</li><li>longitude</li><li>areaCode</li><li>iddCode</li><li>weatherStationCode</li><li>weatherStationName</li><li>mcc</li><li>mnc</li><li>mobileCarrierName</li><li>usageType</li><li>elevation</li><li>netSpeed</li><li>timeZone</li><li>zipCode</li><li>domainName</li><li>isp</li></ul>You can visit [IP2Location](https://www.ip2location.com/databases/db24-ip-country-region-city-latitude-longitude-zipcode-timezone-isp-domain-netspeed-areacode-weather-mobile-elevation-usagetype) for the description of each field. Note: although the above names are not exactly matched with the names given in this link, but they are self-described.|
-|getCidr|Return an array of the sub-network of an IP address.|
+|getCidr|Return an array of the complete IP list in CIDR format of the detected row record based on the given IP address.|
 
 
 ### WebService Class
@@ -87,7 +87,7 @@ Below are the list of other framework library that you can install and use right
 * [IP2Location CakePHP](https://github.com/ip2location/ip2location-cakephp)
 * [IP2Location CodeIgniter](https://github.com/ip2location/codeigniter-ip2location)
 
-## COPYRIGHT AND LICENCE
+## COPYRIGHT AND LICENSE
 
 Copyright (C) 2005-2020 by IP2Location.com
 
