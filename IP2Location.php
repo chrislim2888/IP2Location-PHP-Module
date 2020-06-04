@@ -1519,7 +1519,7 @@ class Database
 	 *
 	 * This method will return an array, whose components will be:
 	 * - first: 4 if the given IP address is an IPv4 one, 6 if it's an IPv6 one,
-	 *          or fase if it's neither.
+	 *          or false if it's neither.
 	 * - second: the IP address' number if its version is 4, the number string if
 	 *           its version is 6, false otherwise.
 	 *
