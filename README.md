@@ -86,6 +86,8 @@ Below are the list of other framework library that you can install and use right
 * [IP2Location Laravel](https://github.com/ip2location/ip2location-laravel)
 * [IP2Location CakePHP](https://github.com/ip2location/ip2location-cakephp)
 * [IP2Location CodeIgniter](https://github.com/ip2location/codeigniter-ip2location)
+* [IP2Location Yii](https://github.com/ip2location/ip2location-yii)
+* [Symfony Framework](https://blog.ip2location.com/knowledge-base/geolocation-lookup-using-symfony-4-and-ip2location-bin-database/). Tutorial on the Symfony implementation.
 
 ## COPYRIGHT AND LICENSE
 
