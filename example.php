@@ -49,7 +49,7 @@ CIDR: ' . implode(', ', $db->getCidr('8.8.8.8')) . '
 </pre>';
 
 // Web Service
-$ws = new \IP2Location\WebService('demo', 'WS24', false);
+$ws = new \IP2Location\WebService('demo', 'WS24', true);
 $records = $ws->lookup('8.8.8.8', [
 	'continent', 'country', 'region', 'city', 'geotargeting', 'country_groupings', 'time_zone_info',
 ], 'en');

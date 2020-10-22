@@ -2155,7 +2155,7 @@ class WebService
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct($apiKey, $package = 'WS1', $useSsl = false)
+	public function __construct($apiKey, $package = 'WS1', $useSsl = true)
 	{
 		if (!\extension_loaded('curl')) {
 			throw new \Exception(__CLASS__ . ": Please make sure your PHP setup has the 'curl' extension enabled.", self::EXCEPTION_NO_CURL);
@@ -2187,7 +2187,7 @@ class WebService
 	 */
 	public function lookup($ip, $addOns = [], $language = 'en')
 	{
-		$response = $this->httpRequest('http://api.ip2location.com/v2/?' . http_build_query([
+		$response = $this->httpRequest('http' . (($this->useSsl) ? 's' : '') . '://api.ip2location.com/v2/?' . http_build_query([
 			'key'     => $this->apiKey,
 			'ip'      => $ip,
 			'package' => $this->package,
@@ -2213,7 +2213,7 @@ class WebService
 	 */
 	public function getCredit()
 	{
-		$response = $this->httpRequest('http://api.ip2location.com/v2/?' . http_build_query([
+		$response = $this->httpRequest('http' . (($this->useSsl) ? 's' : '') . '://api.ip2location.com/v2/?' . http_build_query([
 			'key'   => $this->apiKey,
 			'check' => true,
 		]));
