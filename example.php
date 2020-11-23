@@ -59,3 +59,34 @@ print_r($records);
 
 echo 'Credit Remaining: ' . $ws->getCredit() . "\n";
 echo '</pre>';
+
+
+$ipTools = new \IP2Location\IpTools;
+
+// Validate IPv4 address
+var_dump($ipTools->isIpv4('8.8.8.8'));
+
+echo '<br>';
+
+// Validate IPv6 address
+var_dump($ipTools->isIpv6('2001:4860:4860::8888'));
+
+echo '<br>';
+
+// Convert IPv4 into decimal
+echo $ipTools->ipv4ToDecimal('8.8.8.8');
+
+echo '<br>';
+
+// Convert IPv6 into decimal
+echo $ipTools->ipv6ToDecimal('2001:4860:4860::8888');
+
+echo '<br>';
+
+// Convert decimal into IPv4 address
+echo $ipTools->decimalToIpv4(134744072);
+
+echo '<br>';
+
+// Convert decimal into IPv6 address
+echo $ipTools->decimalToIpv6('42541956123769884636017138956568135816');

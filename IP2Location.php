@@ -31,7 +31,7 @@ class Database
 	 *
 	 * @var string
 	 */
-	const VERSION = '8.2.3';
+	public const VERSION = '8.3.0';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -42,21 +42,21 @@ class Database
 	 *
 	 * @var string
 	 */
-	const FIELD_NOT_SUPPORTED = 'This parameter is unavailable in selected .BIN data file. Please upgrade.';
+	public const FIELD_NOT_SUPPORTED = 'This parameter is unavailable in selected .BIN data file. Please upgrade.';
 
 	/**
 	 * Unknown field message.
 	 *
 	 * @var string
 	 */
-	const FIELD_NOT_KNOWN = 'This parameter is inexistent. Please verify.';
+	public const FIELD_NOT_KNOWN = 'This parameter is inexistent. Please verify.';
 
 	/**
 	 * Invalid IP address message.
 	 *
 	 * @var string
 	 */
-	const INVALID_IP_ADDRESS = 'Invalid IP address.';
+	public const INVALID_IP_ADDRESS = 'Invalid IP address.';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Field selection constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,203 +67,203 @@ class Database
 	 *
 	 * @var int
 	 */
-	const COUNTRY_CODE = 1;
+	public const COUNTRY_CODE = 1;
 
 	/**
 	 * Country name.
 	 *
 	 * @var int
 	 */
-	const COUNTRY_NAME = 2;
+	public const COUNTRY_NAME = 2;
 
 	/**
 	 * Region name.
 	 *
 	 * @var int
 	 */
-	const REGION_NAME = 3;
+	public const REGION_NAME = 3;
 
 	/**
 	 * City name.
 	 *
 	 * @var int
 	 */
-	const CITY_NAME = 4;
+	public const CITY_NAME = 4;
 
 	/**
 	 * Latitude.
 	 *
 	 * @var int
 	 */
-	const LATITUDE = 5;
+	public const LATITUDE = 5;
 
 	/**
 	 * Longitude.
 	 *
 	 * @var int
 	 */
-	const LONGITUDE = 6;
+	public const LONGITUDE = 6;
 
 	/**
 	 * ISP name.
 	 *
 	 * @var int
 	 */
-	const ISP = 7;
+	public const ISP = 7;
 
 	/**
 	 * Domain name.
 	 *
 	 * @var int
 	 */
-	const DOMAIN_NAME = 8;
+	public const DOMAIN_NAME = 8;
 
 	/**
 	 * Zip code.
 	 *
 	 * @var int
 	 */
-	const ZIP_CODE = 9;
+	public const ZIP_CODE = 9;
 
 	/**
 	 * Time zone.
 	 *
 	 * @var int
 	 */
-	const TIME_ZONE = 10;
+	public const TIME_ZONE = 10;
 
 	/**
 	 * Net speed.
 	 *
 	 * @var int
 	 */
-	const NET_SPEED = 11;
+	public const NET_SPEED = 11;
 
 	/**
 	 * IDD code.
 	 *
 	 * @var int
 	 */
-	const IDD_CODE = 12;
+	public const IDD_CODE = 12;
 
 	/**
 	 * Area code.
 	 *
 	 * @var int
 	 */
-	const AREA_CODE = 13;
+	public const AREA_CODE = 13;
 
 	/**
 	 * Weather station code.
 	 *
 	 * @var int
 	 */
-	const WEATHER_STATION_CODE = 14;
+	public const WEATHER_STATION_CODE = 14;
 
 	/**
 	 * Weather station name.
 	 *
 	 * @var int
 	 */
-	const WEATHER_STATION_NAME = 15;
+	public const WEATHER_STATION_NAME = 15;
 
 	/**
 	 * Mobile Country Code.
 	 *
 	 * @var int
 	 */
-	const MCC = 16;
+	public const MCC = 16;
 
 	/**
 	 * Mobile Network Code.
 	 *
 	 * @var int
 	 */
-	const MNC = 17;
+	public const MNC = 17;
 
 	/**
 	 * Mobile carrier name.
 	 *
 	 * @var int
 	 */
-	const MOBILE_CARRIER_NAME = 18;
+	public const MOBILE_CARRIER_NAME = 18;
 
 	/**
 	 * Elevation.
 	 *
 	 * @var int
 	 */
-	const ELEVATION = 19;
+	public const ELEVATION = 19;
 
 	/**
 	 * Usage type.
 	 *
 	 * @var int
 	 */
-	const USAGE_TYPE = 20;
+	public const USAGE_TYPE = 20;
 
 	/**
 	 * Country name and code.
 	 *
 	 * @var int
 	 */
-	const COUNTRY = 101;
+	public const COUNTRY = 101;
 
 	/**
 	 * Latitude and Longitude.
 	 *
 	 * @var int
 	 */
-	const COORDINATES = 102;
+	public const COORDINATES = 102;
 
 	/**
 	 * IDD and area codes.
 	 *
 	 * @var int
 	 */
-	const IDD_AREA = 103;
+	public const IDD_AREA = 103;
 
 	/**
 	 * Weather station name and code.
 	 *
 	 * @var int
 	 */
-	const WEATHER_STATION = 104;
+	public const WEATHER_STATION = 104;
 
 	/**
 	 * MCC, MNC, and mobile carrier name.
 	 *
 	 * @var int
 	 */
-	const MCC_MNC_MOBILE_CARRIER_NAME = 105;
+	public const MCC_MNC_MOBILE_CARRIER_NAME = 105;
 
 	/**
 	 * All fields at once.
 	 *
 	 * @var int
 	 */
-	const ALL = 1001;
+	public const ALL = 1001;
 
 	/**
 	 * Include the IP address of the looked up IP address.
 	 *
 	 * @var int
 	 */
-	const IP_ADDRESS = 1002;
+	public const IP_ADDRESS = 1002;
 
 	/**
 	 * Include the IP version of the looked up IP address.
 	 *
 	 * @var int
 	 */
-	const IP_VERSION = 1003;
+	public const IP_VERSION = 1003;
 
 	/**
 	 * Include the IP number of the looked up IP address.
 	 *
 	 * @var int
 	 */
-	const IP_NUMBER = 1004;
+	public const IP_NUMBER = 1004;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Exception code constants  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -274,70 +274,70 @@ class Database
 	 *
 	 * @var int
 	 */
-	const EXCEPTION = 10000;
+	public const EXCEPTION = 10000;
 
 	/**
 	 * No shmop extension found.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_NO_SHMOP = 10001;
+	public const EXCEPTION_NO_SHMOP = 10001;
 
 	/**
 	 * Failed to open shmop memory segment for reading.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_SHMOP_READING_FAILED = 10002;
+	public const EXCEPTION_SHMOP_READING_FAILED = 10002;
 
 	/**
 	 * Failed to open shmop memory segment for writing.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_SHMOP_WRITING_FAILED = 10003;
+	public const EXCEPTION_SHMOP_WRITING_FAILED = 10003;
 
 	/**
 	 * Failed to create shmop memory segment.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_SHMOP_CREATE_FAILED = 10004;
+	public const EXCEPTION_SHMOP_CREATE_FAILED = 10004;
 
 	/**
 	 * The specified database file was not found.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_DBFILE_NOT_FOUND = 10005;
+	public const EXCEPTION_DBFILE_NOT_FOUND = 10005;
 
 	/**
 	 * Not enough memory to load database file.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_NO_MEMORY = 10006;
+	public const EXCEPTION_NO_MEMORY = 10006;
 
 	/**
 	 * No candidate databse files found.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_NO_CANDIDATES = 10007;
+	public const EXCEPTION_NO_CANDIDATES = 10007;
 
 	/**
 	 * Failed to open database file.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_FILE_OPEN_FAILED = 10008;
+	public const EXCEPTION_FILE_OPEN_FAILED = 10008;
 
 	/**
 	 * Failed to determine the current path.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_NO_PATH = 10009;
+	public const EXCEPTION_NO_PATH = 10009;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Caching method constants  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -348,21 +348,21 @@ class Database
 	 *
 	 * @var int
 	 */
-	const FILE_IO = 100001;
+	public const FILE_IO = 100001;
 
 	/**
 	 * Read the whole database into a variable for caching.
 	 *
 	 * @var int
 	 */
-	const MEMORY_CACHE = 100002;
+	public const MEMORY_CACHE = 100002;
 
 	/**
 	 * Use shared memory objects for caching.
 	 *
 	 * @var int
 	 */
-	const SHARED_MEMORY = 100003;
+	public const SHARED_MEMORY = 100003;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Shared memory constants  /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -373,14 +373,14 @@ class Database
 	 *
 	 * @var int
 	 */
-	const SHM_PERMS = 0600;
+	public const SHM_PERMS = 0600;
 
 	/**
 	 * Number of bytes to read/write at a time in order to load the shared memory cache (512k).
 	 *
 	 * @var int
 	 */
-	const SHM_CHUNK_SIZE = 524288;
+	public const SHM_CHUNK_SIZE = 524288;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Static data  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1268,7 +1268,7 @@ class Database
 
 			list($ipFrom, $ipTo) = $records;
 
-			$ipTo -= 1;
+			--$ipTo;
 
 			while ($ipTo >= $ipFrom) {
 				$maxSize = self::getMaxSize($ipFrom, 32);
@@ -2130,21 +2130,21 @@ class WebService
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_NO_CURL = 10001;
+	public const EXCEPTION_NO_CURL = 10001;
 
 	/**
 	 * Invalid API key format.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_INVALID_API_KEY = 10002;
+	public const EXCEPTION_INVALID_API_KEY = 10002;
 
 	/**
 	 * Web service error.
 	 *
 	 * @var int
 	 */
-	const EXCEPTION_WEB_SERVICE_ERROR = 10003;
+	public const EXCEPTION_WEB_SERVICE_ERROR = 10003;
 
 	/**
 	 * Constructor.
@@ -2155,7 +2155,7 @@ class WebService
 	 *
 	 * @throws \Exception
 	 */
-	public function __construct($apiKey, $package = 'WS1', $useSsl = true)
+	public function __construct($apiKey, $package = 'WS1', $useSsl = false)
 	{
 		if (!\extension_loaded('curl')) {
 			throw new \Exception(__CLASS__ . ": Please make sure your PHP setup has the 'curl' extension enabled.", self::EXCEPTION_NO_CURL);
@@ -2187,7 +2187,7 @@ class WebService
 	 */
 	public function lookup($ip, $addOns = [], $language = 'en')
 	{
-		$response = $this->httpRequest('http' . (($this->useSsl) ? 's' : '') . '://api.ip2location.com/v2/?' . http_build_query([
+		$response = $this->httpRequest('http://api.ip2location.com/v2/?' . http_build_query([
 			'key'     => $this->apiKey,
 			'ip'      => $ip,
 			'package' => $this->package,
@@ -2213,7 +2213,7 @@ class WebService
 	 */
 	public function getCredit()
 	{
-		$response = $this->httpRequest('http' . (($this->useSsl) ? 's' : '') . '://api.ip2location.com/v2/?' . http_build_query([
+		$response = $this->httpRequest('http://api.ip2location.com/v2/?' . http_build_query([
 			'key'   => $this->apiKey,
 			'check' => true,
 		]));
@@ -2257,5 +2257,65 @@ class WebService
 		curl_close($ch);
 
 		return false;
+	}
+}
+
+/**
+ * IpTools class.
+ */
+class IpTools
+{
+	public function isIpv4($ip)
+	{
+		return (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) ? true : false;
+	}
+
+	public function isIpv6($ip)
+	{
+		return (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) ? true : false;
+	}
+
+	public function ipv4ToDecimal($ip)
+	{
+		if (!$this->isIpv4($ip)) {
+			return;
+		}
+
+		return sprintf('%u', ip2long($ip));
+	}
+
+	public function ipv6ToDecimal($ipv6)
+	{
+		if (!$this->isIpv6($ipv6)) {
+			return;
+		}
+
+		return (string) gmp_import(inet_pton($ipv6));
+	}
+
+	public function decimalToIpv4($number)
+	{
+		if (!preg_match('/^\d+$/', $number)) {
+			return;
+		}
+
+		if ($number > 4294967295) {
+			return;
+		}
+
+		return long2ip($number);
+	}
+
+	public function decimalToIpv6($number)
+	{
+		if (!preg_match('/^\d+$/', $number)) {
+			return;
+		}
+
+		if ($number <= 4294967295) {
+			return;
+		}
+
+		return inet_ntop(str_pad(gmp_export($number), 16, "\0", STR_PAD_LEFT));
 	}
 }
