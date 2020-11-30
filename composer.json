@@ -19,5 +19,10 @@
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^9"
+	},
+	"require": {
+		"php": ">=5.4.0",
+		"ext-curl": "*",
+		"ext-gmp": "*"
 	}
 }
