@@ -17,7 +17,7 @@ class DatabaseTest extends TestCase
 		}
 	}
 
-	public function testCountryCode() {
+	public function testIpv4CountryCode() {
 		$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::FILE_IO);
 
 		$records = $db->lookup('8.8.8.8', \IP2Location\Database::ALL);
@@ -28,21 +28,51 @@ class DatabaseTest extends TestCase
 		);
 	}
 
-	public function testCountryName() {
+	public function testIpv4CountryName() {
 		$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::FILE_IO);
 
 		$records = $db->lookup('8.8.8.8', \IP2Location\Database::ALL);
 
 		$this->assertEquals(
-			'United States',
+			'United States of America',
 			$records['countryName'],
 		);
 	}
 
-	public function testUnsupportedField() {
+	public function testIpv4UnsupportedField() {
 		$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::FILE_IO);
 
 		$records = $db->lookup('8.8.8.8', \IP2Location\Database::ALL);
+
+		$this->assertStringContainsString('unavailable', $records['cityName']);
+	}
+
+	public function testIpv6CountryCode() {
+		$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.IPV6.BIN', \IP2Location\Database::FILE_IO);
+
+		$records = $db->lookup('2001:4860:4860::8888', \IP2Location\Database::ALL);
+
+		$this->assertEquals(
+			'US',
+			$records['countryCode'],
+		);
+	}
+
+	public function testIpv6CountryName() {
+		$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.IPV6.BIN', \IP2Location\Database::FILE_IO);
+
+		$records = $db->lookup('2001:4860:4860::8888', \IP2Location\Database::ALL);
+
+		$this->assertEquals(
+			'United States of America',
+			$records['countryName'],
+		);
+	}
+
+	public function testIpv6UnsupportedField() {
+		$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.IPV6.BIN', \IP2Location\Database::FILE_IO);
+
+		$records = $db->lookup('2001:4860:4860::8888', \IP2Location\Database::ALL);
 
 		$this->assertStringContainsString('unavailable', $records['cityName']);
 	}
