@@ -31,12 +31,13 @@ Monthly update is available for both IP2Location LITE and commercial database.
 
 ## INSTALLATION
 
-To install this module, unzip the package and copy the following files to your web folder.
-* IP2Location.php
-* example.php
-* databases/IP2LOCATION-LITE-DB1.BIN
+Install this package using **composer** as below:
 
-To test this installation, please browse example.php using web browser.
+```
+composer require ip2location/ip2location-php
+```
+
+To test this installation, please browse examples/example.php using web browser.
 
 ## USAGE
 
@@ -104,6 +105,6 @@ Below are the list of other framework library that you can install and use right
 
 ## COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2020 by IP2Location.com
+Copyright (C) 2005-2021 by IP2Location.com
 
 License under MIT

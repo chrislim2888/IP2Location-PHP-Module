@@ -1,20 +1,20 @@
 <?php
 
-require_once 'IP2Location.php';
+require 'vendor/autoload.php';
 /*
    Cache whole database into system memory and share among other scripts & websites
    WARNING: Please make sure your system have sufficient RAM to enable this feature
 */
-//$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::SHARED_MEMORY);
+//$db = new \IP2Location\Database('./data/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::SHARED_MEMORY);
 
 /*
    Cache the database into memory to accelerate lookup speed
    WARNING: Please make sure your system have sufficient RAM to enable this feature
 */
-// $db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::MEMORY_CACHE);
+// $db = new \IP2Location\Database('./data/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::MEMORY_CACHE);
 
 // Default file I/O lookup
-$db = new \IP2Location\Database('./databases/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::FILE_IO);
+$db = new \IP2Location\Database('./data/IP2LOCATION-LITE-DB1.BIN', \IP2Location\Database::FILE_IO);
 
 $records = $db->lookup('8.8.8.8', \IP2Location\Database::ALL);
 
