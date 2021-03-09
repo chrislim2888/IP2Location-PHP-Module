@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace IP2Location\Test\IPToolsTest;
+namespace IP2Location\Test\IpToolsTest;
 
-use IP2Location\IPTools;
+use IP2Location\IpTools;
 use PHPUnit\Framework\TestCase;
 
-class IPToolsTest extends TestCase
+class IpToolsTest extends TestCase
 {
 	public function testIpv4() {
 		$ipTools = new \IP2Location\IpTools;
