@@ -5,7 +5,7 @@ namespace IP2Location;
 /**
  * IpTools class.
  */
-class IPTools
+class IpTools
 {
 	public function isIpv4($ip)
 	{
