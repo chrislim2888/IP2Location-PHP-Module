@@ -79,7 +79,14 @@ Below is the description of the functions available in the **IpTools** class.
 | **mixed** ipv6ToDecimal($ip)     | Translate IPv6 address from hexadecimal address to decimal format. Return **null** on error. |
 | **mixed** decimalToIpv6($number) | Translate IPv6 address from decimal number into hexadecimal address. Return **null** on error. |
 
+### Country Class
 
+Below is the description of the functions available in the **Country** class.
+
+| Function Name                          | Description                                                  |
+| -------------------------------------- | ------------------------------------------------------------ |
+| Constructor                            | Expect a IP2Location Country Information CSV file. This database is free for download at https://www.ip2location.com/free/country-information |
+| **array** getCountryInfo($countryCode) | Provide a ISO 3166 country code to get the country information in array. Will return a full list of countries information if country code not provided. |
 
 ## DEPENDENCIES
 

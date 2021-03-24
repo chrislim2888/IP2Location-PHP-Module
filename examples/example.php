@@ -1,6 +1,7 @@
 <?php
 
 require 'vendor/autoload.php';
+
 /*
    Cache whole database into system memory and share among other scripts & websites
    WARNING: Please make sure your system have sufficient RAM to enable this feature
@@ -60,8 +61,7 @@ print_r($records);
 echo 'Credit Remaining: ' . $ws->getCredit() . "\n";
 echo '</pre>';
 
-
-$ipTools = new \IP2Location\IpTools;
+$ipTools = new \IP2Location\IpTools();
 
 // Validate IPv4 address
 var_dump($ipTools->isIpv4('8.8.8.8'));
@@ -90,3 +90,10 @@ echo '<br>';
 
 // Convert decimal into IPv6 address
 echo $ipTools->decimalToIpv6('42541956123769884636017138956568135816');
+
+// List country information for US
+$country = new \IP2Location\Country('./data/IP2LOCATION-COUNTRY-INFORMATION-BASIC.CSV');
+
+echo '<pre>';
+print_r($country->getCountryInfo('US'));
+echo '</pre>';
