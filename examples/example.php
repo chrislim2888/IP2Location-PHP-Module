@@ -19,6 +19,8 @@ $db = new \IP2Location\Database('./data/IP2LOCATION-LITE-DB1.BIN', \IP2Location\
 
 $records = $db->lookup('8.8.8.8', \IP2Location\Database::ALL);
 
+echo $db->getDate();
+
 echo '<pre>';
 echo 'IP Number             : ' . $records['ipNumber'] . "\n";
 echo 'IP Version            : ' . $records['ipVersion'] . "\n";
@@ -43,14 +45,18 @@ echo 'Time Zone             : ' . $records['timeZone'] . "\n";
 echo 'ZIP Code              : ' . $records['zipCode'] . "\n";
 echo 'Domain Name           : ' . $records['domainName'] . "\n";
 echo 'ISP Name              : ' . $records['isp'] . "\n";
+echo 'Address Type          : ' . $records['addressType'] . "\n";
+echo 'Category              : ' . $records['category'] . "\n";
 echo '</pre>';
+
+die;
 
 echo '<pre>
 CIDR: ' . implode(', ', $db->getCidr('8.8.8.8')) . '
 </pre>';
 
 // Web Service
-$ws = new \IP2Location\WebService('demo', 'WS24', true);
+$ws = new \IP2Location\WebService('demo', 'WS25', true);
 $records = $ws->lookup('8.8.8.8', [
 	'continent', 'country', 'region', 'city', 'geotargeting', 'country_groupings', 'time_zone_info',
 ], 'en');
