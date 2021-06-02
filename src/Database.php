@@ -12,7 +12,7 @@ class Database
 	 *
 	 * @var string
 	 */
-	public const VERSION = '9.2.0';
+	public const VERSION = '9.2.1';
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Error field constants  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -739,79 +739,79 @@ class Database
 
 		// initialize caching backend
 		switch ($mode) {
-		case self::SHARED_MEMORY:
-		// verify the shmop extension is loaded
-		if (!\extension_loaded('shmop')) {
-			throw new \Exception(__CLASS__ . ": Please make sure your PHP setup has the 'shmop' extension enabled.", self::EXCEPTION_NO_SHMOP);
-		}
-
-		$limit = self::getMemoryLimit();
-		if ($limit !== false && $size > $limit) {
-			throw new \Exception(__CLASS__ . ": Insufficient memory to load file '{$rfile}'.", self::EXCEPTION_NO_MEMORY);
-		}
-
-		$this->mode = self::SHARED_MEMORY;
-		$shmKey = self::getShmKey($rfile);
-
-		// try to open the shared memory segment
-		$this->resource = @shmop_open($shmKey, 'a', 0, 0);
-		if ($this->resource === false) {
-			// the segment did not exist, create it and load the database into it
-			$fp = fopen($rfile, 'r');
-			if ($fp === false) {
-				throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
+			case self::SHARED_MEMORY:
+			// verify the shmop extension is loaded
+			if (!\extension_loaded('shmop')) {
+				throw new \Exception(__CLASS__ . ": Please make sure your PHP setup has the 'shmop' extension enabled.", self::EXCEPTION_NO_SHMOP);
 			}
 
-			// try to open the memory segment for exclusive access
-			$shmId = @shmop_open($shmKey, 'n', self::SHM_PERMS, $size);
-			if ($shmId === false) {
-				throw new \Exception(__CLASS__ . ": Unable to create shared memory block '{$shmKey}'.", self::EXCEPTION_SHMOP_CREATE_FAILED);
-			}
-
-			// load SHM_CHUNK_SIZE bytes at a time
-			$pointer = 0;
-			while ($pointer < $size) {
-				$buf = fread($fp, self::SHM_CHUNK_SIZE);
-				shmop_write($shmId, $buf, $pointer);
-				$pointer += self::SHM_CHUNK_SIZE;
-			}
-			shmop_close($shmId);
-			fclose($fp);
-
-			// now open the memory segment for readonly access
-			$this->resource = @shmop_open($shmKey, 'a', 0, 0);
-			if ($this->resource === false) {
-				throw new \Exception(__CLASS__ . ": Unable to access shared memory block '{$shmKey}' for reading.", self::EXCEPTION_SHMOP_READING_FAILED);
-			}
-		}
-		break;
-
-		case self::FILE_IO:
-		$this->mode = self::FILE_IO;
-		$this->resource = @fopen($rfile, 'r');
-		if ($this->resource === false) {
-			throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
-		}
-		break;
-
-		case self::MEMORY_CACHE:
-		$this->mode = self::MEMORY_CACHE;
-		$this->resource = $rfile;
-		if (!\array_key_exists($rfile, self::$buffer)) {
 			$limit = self::getMemoryLimit();
 			if ($limit !== false && $size > $limit) {
 				throw new \Exception(__CLASS__ . ": Insufficient memory to load file '{$rfile}'.", self::EXCEPTION_NO_MEMORY);
 			}
 
-			self::$buffer[$rfile] = @file_get_contents($rfile);
-			if (self::$buffer[$rfile] === false) {
+			$this->mode = self::SHARED_MEMORY;
+			$shmKey = self::getShmKey($rfile);
+
+			// try to open the shared memory segment
+			$this->resource = @shmop_open($shmKey, 'a', 0, 0);
+			if ($this->resource === false) {
+				// the segment did not exist, create it and load the database into it
+				$fp = fopen($rfile, 'r');
+				if ($fp === false) {
+					throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
+				}
+
+				// try to open the memory segment for exclusive access
+				$shmId = @shmop_open($shmKey, 'n', self::SHM_PERMS, $size);
+				if ($shmId === false) {
+					throw new \Exception(__CLASS__ . ": Unable to create shared memory block '{$shmKey}'.", self::EXCEPTION_SHMOP_CREATE_FAILED);
+				}
+
+				// load SHM_CHUNK_SIZE bytes at a time
+				$pointer = 0;
+				while ($pointer < $size) {
+					$buf = fread($fp, self::SHM_CHUNK_SIZE);
+					shmop_write($shmId, $buf, $pointer);
+					$pointer += self::SHM_CHUNK_SIZE;
+				}
+				shmop_close($shmId);
+				fclose($fp);
+
+				// now open the memory segment for readonly access
+				$this->resource = @shmop_open($shmKey, 'a', 0, 0);
+				if ($this->resource === false) {
+					throw new \Exception(__CLASS__ . ": Unable to access shared memory block '{$shmKey}' for reading.", self::EXCEPTION_SHMOP_READING_FAILED);
+				}
+			}
+			break;
+
+			case self::FILE_IO:
+			$this->mode = self::FILE_IO;
+			$this->resource = @fopen($rfile, 'r');
+			if ($this->resource === false) {
 				throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
 			}
-		}
-		break;
+			break;
 
-		default:
-	}
+			case self::MEMORY_CACHE:
+			$this->mode = self::MEMORY_CACHE;
+			$this->resource = $rfile;
+			if (!\array_key_exists($rfile, self::$buffer)) {
+				$limit = self::getMemoryLimit();
+				if ($limit !== false && $size > $limit) {
+					throw new \Exception(__CLASS__ . ": Insufficient memory to load file '{$rfile}'.", self::EXCEPTION_NO_MEMORY);
+				}
+
+				self::$buffer[$rfile] = @file_get_contents($rfile);
+				if (self::$buffer[$rfile] === false) {
+					throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
+				}
+			}
+			break;
+
+			default:
+		}
 
 		// determine the platform's float size
 		//
@@ -863,21 +863,21 @@ class Database
 	public function __destruct()
 	{
 		switch ($this->mode) {
-		case self::FILE_IO:
-		// free the file pointer
-		if ($this->resource !== false) {
-			fclose($this->resource);
-			$this->resource = false;
+			case self::FILE_IO:
+			// free the file pointer
+			if ($this->resource !== false) {
+				fclose($this->resource);
+				$this->resource = false;
+			}
+			break;
+			case self::SHARED_MEMORY:
+			// detach from the memory segment
+			if ($this->resource !== false) {
+				shmop_close($this->resource);
+				$this->resource = false;
+			}
+			break;
 		}
-		break;
-		case self::SHARED_MEMORY:
-		// detach from the memory segment
-		if ($this->resource !== false) {
-			shmop_close($this->resource);
-			$this->resource = false;
-		}
-		break;
-	}
 	}
 
 	/**
@@ -1056,39 +1056,40 @@ class Database
 
 		// maintain a list of already retrieved fields to avoid doing it twice
 		$done = [
-		self::COUNTRY_CODE         => false,
-		self::COUNTRY_NAME         => false,
-		self::REGION_NAME          => false,
-		self::CITY_NAME            => false,
-		self::LATITUDE             => false,
-		self::LONGITUDE            => false,
-		self::ISP                  => false,
-		self::DOMAIN_NAME          => false,
-		self::ZIP_CODE             => false,
-		self::TIME_ZONE            => false,
-		self::NET_SPEED            => false,
-		self::IDD_CODE             => false,
-		self::AREA_CODE            => false,
-		self::WEATHER_STATION_CODE => false,
-		self::WEATHER_STATION_NAME => false,
-		self::MCC                  => false,
-		self::MNC                  => false,
-		self::MOBILE_CARRIER_NAME  => false,
-		self::ELEVATION            => false,
-		self::USAGE_TYPE           => false,
-		self::ADDRESS_TYPE         => false,
-		self::CATEGORY             => false,
+			self::COUNTRY_CODE         => false,
+			self::COUNTRY_NAME         => false,
+			self::REGION_NAME          => false,
+			self::CITY_NAME            => false,
+			self::LATITUDE             => false,
+			self::LONGITUDE            => false,
+			self::ISP                  => false,
+			self::DOMAIN_NAME          => false,
+			self::ZIP_CODE             => false,
+			self::TIME_ZONE            => false,
+			self::NET_SPEED            => false,
+			self::IDD_CODE             => false,
+			self::AREA_CODE            => false,
+			self::WEATHER_STATION_CODE => false,
+			self::WEATHER_STATION_NAME => false,
+			self::MCC                  => false,
+			self::MNC                  => false,
+			self::MOBILE_CARRIER_NAME  => false,
+			self::ELEVATION            => false,
+			self::USAGE_TYPE           => false,
+			self::ADDRESS_TYPE         => false,
+			self::CATEGORY             => false,
 
-		self::COUNTRY                     => false,
-		self::COORDINATES                 => false,
-		self::IDD_AREA                    => false,
-		self::WEATHER_STATION             => false,
-		self::MCC_MNC_MOBILE_CARRIER_NAME => false,
+			self::COUNTRY                     => false,
+			self::COORDINATES                 => false,
+			self::IDD_AREA                    => false,
+			self::WEATHER_STATION             => false,
+			self::MCC_MNC_MOBILE_CARRIER_NAME => false,
 
-		self::IP_ADDRESS => false,
-		self::IP_VERSION => false,
-		self::IP_NUMBER  => false,
-	];
+			self::IP_ADDRESS => false,
+			self::IP_VERSION => false,
+			self::IP_NUMBER  => false,
+		];
+
 		// results are empty to begin with
 		$results = [];
 
@@ -1450,12 +1451,12 @@ class Database
 			} else {
 				// Deal with shorthand bytes
 				switch (strtoupper(substr($limit, -1))) {
-			case 'G': $value *= 1024;
-			// no break
-			case 'M': $value *= 1024;
-			// no break
-			case 'K': $value *= 1024;
-		}
+					case 'G': $value *= 1024;
+					// no break
+					case 'M': $value *= 1024;
+					// no break
+					case 'K': $value *= 1024;
+				}
 			}
 			self::$memoryLimit = $value;
 		}
@@ -1622,8 +1623,8 @@ class Database
 			}
 
 			// Teredo Address - 2001:0::/32
-			if (substr($ip, 0, 9) == '2001:0000') {
-				return [4, hexdec(substr($ip, 10, 4) . substr($ip, 15, 4))];
+			if (substr($ip, 0, 9) == '2001:0000' && str_replace(':', '', substr($ip, -9)) != '00000000') {
+				return [4, ip2long(long2ip(~hexdec(str_replace(':', '', substr($ip, -9)))))];
 			}
 
 			foreach (str_split(bin2hex(inet_pton($ip)), 8) as $word) {
@@ -1706,17 +1707,16 @@ class Database
 	private function read($pos, $len)
 	{
 		switch ($this->mode) {
-		case self::SHARED_MEMORY:
-		return shmop_read($this->resource, $pos, $len);
+			case self::SHARED_MEMORY:
+				return shmop_read($this->resource, $pos, $len);
 
-		case self::MEMORY_CACHE:
-		return $data = substr(self::$buffer[$this->resource], $pos, $len);
+			case self::MEMORY_CACHE:
+				return $data = substr(self::$buffer[$this->resource], $pos, $len);
 
-		default:
-		fseek($this->resource, $pos, SEEK_SET);
-
-		return fread($this->resource, $len);
-	}
+			default:
+				fseek($this->resource, $pos, SEEK_SET);
+				return fread($this->resource, $len);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2231,7 +2231,7 @@ class Database
 
 		//hjlim
 		$indexBaseStart = $this->indexBaseAddr[$version];
-		if ($indexBaseStart > 0) {
+		if ($indexBaseStart > 1) {
 			$indexPos = 0;
 
 			switch ($version) {
