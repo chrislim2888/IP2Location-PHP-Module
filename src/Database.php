@@ -775,7 +775,11 @@ class Database
 					shmop_write($shmId, $buf, $pointer);
 					$pointer += self::SHM_CHUNK_SIZE;
 				}
-				shmop_close($shmId);
+
+				if (PHP_MAJOR_VERSION < 8) {
+					shmop_close($shmId);
+				}
+
 				fclose($fp);
 
 				// now open the memory segment for readonly access
@@ -873,7 +877,10 @@ class Database
 			case self::SHARED_MEMORY:
 			// detach from the memory segment
 			if ($this->resource !== false) {
-				shmop_close($this->resource);
+				if (PHP_MAJOR_VERSION < 8) {
+					shmop_close($this->resource);
+				}
+
 				$this->resource = false;
 			}
 			break;
