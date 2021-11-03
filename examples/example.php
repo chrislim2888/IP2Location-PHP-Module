@@ -49,14 +49,12 @@ echo 'Address Type          : ' . $records['addressType'] . "\n";
 echo 'Category              : ' . $records['category'] . "\n";
 echo '</pre>';
 
-die;
-
 echo '<pre>
 CIDR: ' . implode(', ', $db->getCidr('8.8.8.8')) . '
 </pre>';
 
 // Web Service
-$ws = new \IP2Location\WebService('demo', 'WS25', true);
+$ws = new \IP2Location\WebService('YOUR_API_KEY', 'WS25', true);
 $records = $ws->lookup('8.8.8.8', [
 	'continent', 'country', 'region', 'city', 'geotargeting', 'country_groupings', 'time_zone_info',
 ], 'en');

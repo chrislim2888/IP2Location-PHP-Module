@@ -81,7 +81,7 @@ class WebService
 			return false;
 		}
 
-		if (isset($data['response'])) {
+		if ($data['response'] != 'OK') {
 			throw new \Exception(__CLASS__ . ': ' . $data['response'], self::EXCEPTION_WEB_SERVICE_ERROR);
 		}
 
