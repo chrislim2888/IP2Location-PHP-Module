@@ -60,4 +60,231 @@ class IpTools
 
 		return inet_ntop(str_pad(gmp_export($number), 16, "\0", STR_PAD_LEFT));
 	}
+
+	public function ipv4ToCidr($ipFrom, $ipTo)
+	{
+		$s = explode('.', $ipFrom);
+
+		$start = '';
+		$dot = '';
+
+		foreach ($s as $val) {
+			$start = sprintf('%s%s%d', $start, $dot, $val);
+			$dot = '.';
+		}
+
+		$end = '';
+		$dot = '';
+
+		$e = explode('.', $ipTo);
+
+		foreach ($e as $val) {
+			$end = sprintf('%s%s%d', $end, $dot, $val);
+			$dot = '.';
+		}
+
+		$start = ip2long($start);
+		$end = ip2long($end);
+		$result = [];
+
+		while ($end >= $start) {
+			$maxSize = $this->maxBlock($start, 32);
+			$x = log($end - $start + 1) / log(2);
+			$maxDiff = floor(32 - floor($x));
+
+			$ip = long2ip($start);
+
+			if ($maxSize < $maxDiff) {
+				$maxSize = $maxDiff;
+			}
+
+			array_push($result, "$ip/$maxSize");
+			$start += pow(2, (32 - $maxSize));
+		}
+
+		return $result;
+	}
+
+	public function ipv6ToCidr($ipFrom, $ipTo)
+	{
+		$ipFromBinary = str_pad($this->ip2Bin($ipFrom), 128, '0', STR_PAD_LEFT);
+		$ipToBinary = str_pad($this->ip2Bin($ipTo), 128, '0', STR_PAD_LEFT);
+
+		if ($ipFromBinary === $ipToBinary) {
+			return [$ipFrom . '/' . 128];
+		}
+
+		if (strcmp($ipFromBinary, $ipToBinary) > 0) {
+			list($ipFromBinary, $ipToBinary) = [$ipToBinary, $ipFromBinary];
+		}
+
+		$networks = [];
+		$networkSize = 0;
+
+		do {
+			if (substr($ipFromBinary, -1, 1) == '1') {
+				$networks[substr($ipFromBinary, $networkSize, 128 - $networkSize) . str_repeat('0', $networkSize)] = 128 - $networkSize;
+
+				$n = strrpos($ipFromBinary, '0');
+				$ipFromBinary = (($n == 0) ? '' : substr($ipFromBinary, 0, $n)) . '1' . str_repeat('0', 128 - $n - 1);
+			}
+
+			if (substr($ipToBinary, -1, 1) == '0') {
+				$networks[substr($ipToBinary, $networkSize, 128 - $networkSize) . str_repeat('0', $networkSize)] = 128 - $networkSize;
+				$n = strrpos($ipToBinary, '1');
+				$ipToBinary = (($n == 0) ? '' : substr($ipToBinary, 0, $n)) . '0' . str_repeat('1', 128 - $n - 1);
+			}
+
+			if (strcmp($ipToBinary, $ipFromBinary) < 0) {
+				continue;
+			}
+
+			$shift = 128 - max(strrpos($ipFromBinary, '0'), strrpos($ipToBinary, '1'));
+			$ipFromBinary = str_repeat('0', $shift) . substr($ipFromBinary, 0, 128 - $shift);
+			$ipToBinary = str_repeat('0', $shift) . substr($ipToBinary, 0, 128 - $shift);
+			$networkSize += $shift;
+			if ($ipFromBinary === $ipToBinary) {
+				$networks[substr($ipFromBinary, $networkSize, 128 - $networkSize) . str_repeat('0', $networkSize)] = 128 - $networkSize;
+				continue;
+			}
+		} while (strcmp($ipFromBinary, $ipToBinary) < 0);
+
+		ksort($networks, SORT_STRING);
+		$result = [];
+
+		foreach ($networks as $ip => $netmask) {
+			$result[] = $this->bin2Ip($ip) . '/' . $netmask;
+		}
+
+		return $result;
+	}
+
+	public function cidrToIpv4($cidr)
+	{
+		if (strpos($cidr, '/') === false) {
+			return;
+		}
+
+		list($ip, $prefix) = explode('/', $cidr);
+
+		$ipStart = long2ip((ip2long($ip)) & ((-1 << (32 - (int) $prefix))));
+
+		$total = 1 << (32 - $prefix);
+
+		$ipStartLong = sprintf('%u', ip2long($ipStart));
+		$ipEndLong = $ipStartLong + $total - 1;
+
+		if ($ipEndLong > 4294967295) {
+			$ipEndLong = 4294967295;
+		}
+
+		$ipLast = long2ip($ipEndLong);
+
+		return [
+			'ip_start' => $ipStart,
+			'ip_end'   => $ipLast,
+		];
+	}
+
+	public function cidrToIpv6($cidr)
+	{
+		if (strpos($cidr, '/') === false) {
+			return;
+		}
+
+		list($ip, $range) = explode('/', $cidr);
+
+		// Convert the IPv6 into binary
+		$binFirstAddress = inet_pton($ip);
+
+		// Convert the binary string to a string with hexadecimal characters
+		$hexStartAddress = @reset(@unpack('H*0', $binFirstAddress));
+
+		// Get available bits
+		$bits = 128 - $range;
+
+		$hexLastAddress = $hexStartAddress;
+
+		$pos = 31;
+		while ($bits > 0) {
+			// Convert current character to an integer
+			$int = hexdec(substr($hexLastAddress, $pos, 1));
+
+			// Convert it back to a hexadecimal character
+			$new = dechex($int | (pow(2, min(4, $bits)) - 1));
+
+			// And put that character back in the string
+			$hexLastAddress = substr_replace($hexLastAddress, $new, $pos, 1);
+
+			$bits -= 4;
+			--$pos;
+		}
+
+		$binLastAddress = pack('H*', $hexLastAddress);
+
+		return [
+			'ip_start' => $this->expand(inet_ntop($binFirstAddress)),
+			'ip_end'   => $this->expand(inet_ntop($binLastAddress)),
+		];
+	}
+
+	public function bin2Ip($bin)
+	{
+		if (\strlen($bin) != 128) {
+			return;
+		}
+
+		$pad = 128 - \strlen($bin);
+		for ($i = 1; $i <= $pad; ++$i) {
+			$bin = '0' . $bin;
+		}
+
+		$bits = 0;
+		$ipv6 = '';
+
+		while ($bits <= 7) {
+			$bin_part = substr($bin, ($bits * 16), 16);
+			$ipv6 .= dechex(bindec($bin_part)) . ':';
+			++$bits;
+		}
+
+		return inet_ntop(inet_pton(substr($ipv6, 0, -1)));
+	}
+
+	private function ip2Bin($ip)
+	{
+		if (($n = inet_pton($ip)) === false) {
+			return false;
+		}
+
+		$bits = 15;
+		$binary = '';
+		while ($bits >= 0) {
+			$bin = sprintf('%08b', (\ord($n[$bits])));
+			$binary = $bin . $binary;
+			--$bits;
+		}
+
+		return $binary;
+	}
+
+	private function maxBlock($base, $bit)
+	{
+		while ($bit > 0) {
+			$decimal = hexdec(base_convert((pow(2, 32) - pow(2, (32 - ($bit - 1)))), 10, 16));
+
+			if (($base & $decimal) != $base) {
+				break;
+			}
+
+			--$bit;
+		}
+
+		return $bit;
+	}
+
+	private function expand($ipv6)
+	{
+		return implode(':', str_split(unpack('H*0', inet_pton($ipv6))[0], 4));
+	}
 }

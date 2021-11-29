@@ -70,14 +70,18 @@ Below is the description of the functions available in the **WebService** class.
 
 Below is the description of the functions available in the **IpTools** class.
 
-| Function Name                    | Description                                                  |
-| -------------------------------- | ------------------------------------------------------------ |
-| **bool** isIpv4($ip)             | Return either **true** or **false**. Verify if a string is a valid IPv4 address. |
-| **bool** isIpv6($ip)             | Return either **true** or **false**. Verify if a string is a valid IPv6 address. |
-| **mixed** ipv4ToDecimal($ip)     | Translate IPv4 address from dotted-decimal address to decimal format. Return **null** on error. |
-| **mixed** decimalToIpv4($number) | Translate IPv4 address from decimal number to dotted-decimal address. Return **null** on error. |
-| **mixed** ipv6ToDecimal($ip)     | Translate IPv6 address from hexadecimal address to decimal format. Return **null** on error. |
-| **mixed** decimalToIpv6($number) | Translate IPv6 address from decimal number into hexadecimal address. Return **null** on error. |
+| Function Name                        | Description                                                  |
+| ------------------------------------ | ------------------------------------------------------------ |
+| **bool** isIpv4($ip)                 | Return either **true** or **false**. Verify if a string is a valid IPv4 address. |
+| **bool** isIpv6($ip)                 | Return either **true** or **false**. Verify if a string is a valid IPv6 address. |
+| **mixed** ipv4ToDecimal($ip)         | Translate IPv4 address from dotted-decimal address to decimal format. Return **null** on error. |
+| **mixed** decimalToIpv4($number)     | Translate IPv4 address from decimal number to dotted-decimal address. Return **null** on error. |
+| **mixed** ipv6ToDecimal($ip)         | Translate IPv6 address from hexadecimal address to decimal format. Return **null** on error. |
+| **mixed** decimalToIpv6($number)     | Translate IPv6 address from decimal number into hexadecimal address. Return **null** on error. |
+| **array** ipv4ToCidr($ipFrom, $ipTo) | Convert IPv4 range into a list of IPv4 CIDR notation.        |
+| **array** cidrToIpv4($cidr)          | Convert IPv4 CIDR notation into a list of IPv4 addresses.    |
+| **array** ipv6ToCidr($ipFrom, $ipTo) | Convert IPv6 range into a list of IPv6 CIDR notation.        |
+| **array** cidrToIpv6($cidr)          | Convert IPv6 CIDR notation into a list of IPv6 addresses.    |
 
 ### Country Class
 

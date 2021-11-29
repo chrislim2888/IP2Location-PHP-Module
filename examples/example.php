@@ -54,7 +54,7 @@ CIDR: ' . implode(', ', $db->getCidr('8.8.8.8')) . '
 </pre>';
 
 // Web Service
-$ws = new \IP2Location\WebService('YOUR_API_KEY', 'WS25', true);
+/*$ws = new \IP2Location\WebService('YOUR_API_KEY', 'WS25', true);
 $records = $ws->lookup('8.8.8.8', [
 	'continent', 'country', 'region', 'city', 'geotargeting', 'country_groupings', 'time_zone_info',
 ], 'en');
@@ -63,7 +63,7 @@ echo '<pre>';
 print_r($records);
 
 echo 'Credit Remaining: ' . $ws->getCredit() . "\n";
-echo '</pre>';
+echo '</pre>';*/
 
 $ipTools = new \IP2Location\IpTools();
 
@@ -89,6 +89,26 @@ echo '<br>';
 
 // Convert decimal into IPv4 address
 echo $ipTools->decimalToIpv4(134744072);
+
+// Convert IPv4 range into CIDR
+echo '<pre>';
+print_r($ipTools->ipv4ToCidr('8.0.0.0', '8.255.255.255'));
+echo '</pre>';
+
+// Convert CIDR to IPv4 range
+echo '<pre>';
+print_r($ipTools->cidrToIpv4('8.0.0.0/8'));
+echo '</pre>';
+
+// Convert CIDR into IPv6 range
+echo '<pre>';
+print_r($ipTools->cidrToIpv6('2002::1234:abcd:ffff:c0a8:101/64'));
+echo '</pre>';
+
+// Convert IPv6 range into CIDR
+echo '<pre>';
+print_r($ipTools->ipv6ToCidr('2002:0000:0000:1234:abcd:ffff:c0a8:0101', '2002:0000:0000:1234:ffff:ffff:ffff:ffff'));
+echo '</pre>';
 
 echo '<br>';
 
