@@ -82,6 +82,8 @@ Below is the description of the functions available in the **IpTools** class.
 | **array** cidrToIpv4($cidr)          | Convert IPv4 CIDR notation into a list of IPv4 addresses.    |
 | **array** ipv6ToCidr($ipFrom, $ipTo) | Convert IPv6 range into a list of IPv6 CIDR notation.        |
 | **array** cidrToIpv6($cidr)          | Convert IPv6 CIDR notation into a list of IPv6 addresses.    |
+| **string** compressIpv6($ipv6)       | Compress a IPv6 to shorten the length.                       |
+| **string** expandIpv6($ipv6)         | Expand a shorten IPv6 to full length.                        |
 
 ### Country Class
 

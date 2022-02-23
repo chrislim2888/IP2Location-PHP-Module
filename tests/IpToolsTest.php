@@ -112,8 +112,24 @@ class IpToolsTest extends TestCase
 		$ipTools = new \IP2Location\IpTools();
 
 		$this->assertEqualsCanonicalizing(
-			['2002::1234:abcd:ffff:c0a8:101/64'],
-			$ipTools->ipv6ToCidr('2002:0000:0000:1234:abcd:ffff:c0a8:0101', '2002:0000:0000:1234:ffff:ffff:ffff:ffff')
+			[
+				'2002::1234:abcd:ffff:c0a8:0/109',
+				'2002::1234:abcd:ffff:c0b0:0/108',
+				'2002::1234:abcd:ffff:c0c0:0/106',
+				'2002::1234:abcd:ffff:c100:0/104',
+				'2002::1234:abcd:ffff:c200:0/103',
+				'2002::1234:abcd:ffff:c400:0/102',
+				'2002::1234:abcd:ffff:c800:0/101',
+				'2002::1234:abcd:ffff:d000:0/100',
+				'2002::1234:abcd:ffff:e000:0/99',
+				'2002:0:0:1234:abce::/79',
+				'2002:0:0:1234:abd0::/76',
+				'2002:0:0:1234:abe0::/75',
+				'2002:0:0:1234:ac00::/70',
+				'2002:0:0:1234:b000::/68',
+				'2002:0:0:1234:c000::/66',
+			],
+			$ipTools->ipv6ToCidr('2002:0000:0000:1234:abcd:ffff:c0a8:0000', '2002:0000:0000:1234:ffff:ffff:ffff:ffff')
 		);
 	}
 
@@ -127,6 +143,26 @@ class IpToolsTest extends TestCase
 				'ip_end'   => '2002:0000:0000:1234:ffff:ffff:ffff:ffff',
 			],
 			$ipTools->cidrToIpv6('2002::1234:abcd:ffff:c0a8:101/64')
+		);
+	}
+
+	public function testCompressIpv6()
+	{
+		$ipTools = new \IP2Location\IpTools();
+
+		$this->assertEquals(
+			'2002::1234:ffff:ffff:ffff:ffff',
+			$ipTools->compressIpv6('2002:0000:0000:1234:ffff:ffff:ffff:ffff')
+		);
+	}
+
+	public function testExpandIpv6()
+	{
+		$ipTools = new \IP2Location\IpTools();
+
+		$this->assertEquals(
+			'2002:0000:0000:1234:ffff:ffff:ffff:ffff',
+			$ipTools->expandIpv6('2002::1234:ffff:ffff:ffff:ffff')
 		);
 	}
 }

@@ -251,6 +251,18 @@ class IpTools
 		return inet_ntop(inet_pton(substr($ipv6, 0, -1)));
 	}
 
+	public function compressIpv6($ipv6)
+	{
+		return inet_ntop(inet_pton($ipv6));
+	}
+
+	public function expandIpv6($ipv6)
+	{
+		$hex = unpack('H*0', inet_pton($ipv6));
+
+		return implode(':', str_split($hex[0], 4));
+	}
+
 	private function ip2Bin($ip)
 	{
 		if (($n = inet_pton($ip)) === false) {

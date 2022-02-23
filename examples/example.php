@@ -107,7 +107,17 @@ echo '</pre>';
 
 // Convert IPv6 range into CIDR
 echo '<pre>';
-print_r($ipTools->ipv6ToCidr('2002:0000:0000:1234:abcd:ffff:c0a8:0101', '2002:0000:0000:1234:ffff:ffff:ffff:ffff'));
+print_r($ipTools->ipv6ToCidr('2002:0000:0000:1234:abcd:ffff:c0a8:0000', '2002:0000:0000:1234:ffff:ffff:ffff:ffff'));
+echo '</pre>';
+
+// Compress IPv6
+echo '<pre>';
+print_r($ipTools->compressIpv6('2002:0000:0000:1234:FFFF:FFFF:FFFF:FFFF'));
+echo '</pre>';
+
+// Expand IPv6
+echo '<pre>';
+print_r($ipTools->compressIpv6('2002::1234:FFFF:FFFF:FFFF:FFFF'));
 echo '</pre>';
 
 echo '<br>';
