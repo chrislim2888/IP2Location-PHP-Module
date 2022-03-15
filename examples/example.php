@@ -117,7 +117,7 @@ echo '</pre>';
 
 // Expand IPv6
 echo '<pre>';
-print_r($ipTools->compressIpv6('2002::1234:FFFF:FFFF:FFFF:FFFF'));
+print_r($ipTools->expandIpv6('2002::1234:FFFF:FFFF:FFFF:FFFF'));
 echo '</pre>';
 
 echo '<br>';
