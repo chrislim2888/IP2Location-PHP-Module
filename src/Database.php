@@ -355,6 +355,13 @@ class Database
 	 */
 	public const EXCEPTION_INVALID_BIN_DATABASE = 10010;
 
+    /**
+     * Failed to delete shmop memory segment.
+     *
+     * @var int
+     */
+    public const EXCEPTION_SHMOP_DELETE_FAILED = 10011;
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//  Caching method constants  ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -752,11 +759,17 @@ class Database
 
 			$this->mode = self::SHARED_MEMORY;
 			$shmKey = self::getShmKey($rfile);
+			$fileSizeChanged = false;
 
 			// try to open the shared memory segment
 			$this->resource = @shmop_open($shmKey, 'a', 0, 0);
-			if ($this->resource === false) {
-				// the segment did not exist, create it and load the database into it
+			if ($this->resource === false || $fileSizeChanged = (shmop_size($this->resource) !== filesize($rfile))) {
+				// file size has changed, remove old segment
+				if($fileSizeChanged && !shmop_delete($this->resource)){
+					throw new \Exception(__CLASS__ . ": Unable to delete shared memory block '{$shmKey}'.", self::EXCEPTION_SHMOP_DELETE_FAILED);
+				}
+
+				// the segment did not exist or file size changed, create it and load the database into it
 				$fp = fopen($rfile, 'r');
 				if ($fp === false) {
 					throw new \Exception(__CLASS__ . ": Unable to open file '{$rfile}'.", self::EXCEPTION_FILE_OPEN_FAILED);
