@@ -94,6 +94,17 @@ Below is the description of the functions available in the **Country** class.
 | Constructor                            | Expect a IP2Location Country Information CSV file. This database is free for download at https://www.ip2location.com/free/country-information |
 | **array** getCountryInfo($countryCode) | Provide a ISO 3166 country code to get the country information in array. Will return a full list of countries information if country code not provided. Below is the information returned: <ul><li>country_code</li><li>country_alpha3_code</li><li>country_numeric_code</li><li>capital</li><li>country_demonym</li><li>total_area</li><li>population</li><li>idd_code</li><li>currency_code</li><li>currency_name</li><li>currency_symbol</li><li>lang_code</li><li>lang_name</li><li>cctld</li></ul> |
 
+### RegionClass
+
+Below is the description of the functions available in the **Region** class.
+
+| Function Name                                       | Description                                                  |
+| --------------------------------------------------- | ------------------------------------------------------------ |
+| Constructor                                         | Expect a IP2Location ISO 3166-2 Subdivision Code CSV file. This database is free for download at https://www.ip2location.com/free/iso3166-2 |
+| **string** getRegionCode($countryCode, $regionName) | Provide a ISO 3166 country code and the region name to get ISO 3166-2 subdivision code for the region. |
+
+
+
 ## DEPENDENCIES
 
 This library requires IP2Location BIN data file to function. You may download the BIN data file at
