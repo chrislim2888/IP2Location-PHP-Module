@@ -55,6 +55,7 @@ Below is the description of the functions available in the **Database** class.
 |**string** getDatabaseVersion()|Return the version of database|
 |**array** lookup($ip)|Return the IP information in array. Below is the information returned:<ul><li>ipNumber</li><li>ipVersion</li><li>ipAddress</li><li>countryCode</li><li>countryName</li><li>regionName</li><li>cityName</li><li>latitude</li><li>longitude</li><li>areaCode</li><li>iddCode</li><li>weatherStationCode</li><li>weatherStationName</li><li>mcc</li><li>mnc</li><li>mobileCarrierName</li><li>usageType</li><li>elevation</li><li>netSpeed</li><li>timeZone</li><li>zipCode</li><li>domainName</li><li>isp</li><li>addressType</li><li>category</li></ul>You can visit [IP2Location](https://www.ip2location.com/databases/db25-ip-country-region-city-latitude-longitude-zipcode-timezone-isp-domain-netspeed-areacode-weather-mobile-elevation-usagetype-addresstype-category) for the description of each field. Note: although the above names are not exactly matched with the names given in this link, but they are self-described.|
 |**array** getCidr($ip)|Return an array of the complete IP list in CIDR format of the detected row record based on the given IP address.|
+|**string** getVisitorIp()|Return the real IP address of the visitor. If an array of $ipData is supplied, it will return the list of IP address data found.|
 
 
 ### WebService Class
@@ -129,6 +130,6 @@ Below are the list of other framework library that you can install and use right
 
 ## COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2021 by IP2Location.com
+Copyright (C) 2005-2022 by IP2Location.com
 
 License under MIT
