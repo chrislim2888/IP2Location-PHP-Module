@@ -300,31 +300,29 @@ class IpTools
 			}
 		}
 
-		if (!empty($ipData)) {
-			if (is_array($ipData)) {
-				if ($ipRemoteAdd != '::1') {
-					$ipData['REMOTE_ADDR'] = $ipRemoteAdd;
-				}
+		if ((is_array($ipData)) || ($ipData == null)) {
+			if ($ipRemoteAdd != '::1') {
+				$ipData['REMOTE_ADDR'] = $ipRemoteAdd;
+			}
 
-				if ($ipSucuri != '::1') {
-					$ipData['HTTP_X_SUCURI_CLIENTIP'] = $ipSucuri;
-				}
+			if ($ipSucuri != '::1') {
+				$ipData['HTTP_X_SUCURI_CLIENTIP'] = $ipSucuri;
+			}
 
-				if ($ipIncap != '::1') {
-					$ipData['HTTP_INCAP_CLIENT_IP'] = $ipIncap;
-				}
+			if ($ipIncap != '::1') {
+				$ipData['HTTP_INCAP_CLIENT_IP'] = $ipIncap;
+			}
 
-				if ($ipCf != '::1') {
-					$ipData['HTTP_CF_CONNECTING_IP'] = $ipCf;
-				}
+			if ($ipCf != '::1') {
+				$ipData['HTTP_CF_CONNECTING_IP'] = $ipCf;
+			}
 
-				if ($ipReal != '::1') {
-					$ipData['HTTP_X_REAL_IP'] = $ipReal;
-				}
+			if ($ipReal != '::1') {
+				$ipData['HTTP_X_REAL_IP'] = $ipReal;
+			}
 
-				if ($ipForwardedOri != '::1') {
-					$ipData['HTTP_X_FORWARDED_FOR'] = $ipForwardedOri;
-				}
+			if ($ipForwardedOri != '::1') {
+				$ipData['HTTP_X_FORWARDED_FOR'] = $ipForwardedOri;
 			}
 		}
 
