@@ -12,7 +12,7 @@ class Database
 	 *
 	 * @var string
 	 */
-	public const VERSION = '9.5.1';
+	public const VERSION = '9.5.2';
 
 	/**
 	 * Unsupported field message.
@@ -1353,81 +1353,6 @@ class Database
 		}
 
 		return false;
-	}
-
-	/**
-	 * Get visitor real IP address.
-	 *
-	 * @param array $ipData
-	 *
-	 * @return string
-	 * */
-	public function getVisitorIp(&$ipData = null)
-	{
-		$ip = $ipRemoteAdd = $ipSucuri = $ipIncap = $ipCf = $ipReal = $ipForwarded = $ipForwardedOri = '::1';
-
-		if (isset($_SERVER['REMOTE_ADDR']) && filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)) {
-			$ipRemoteAdd = $ip = $_SERVER['REMOTE_ADDR'];
-		}
-
-		// Get real client IP if they are behind Sucuri firewall.
-		if (isset($_SERVER['HTTP_X_SUCURI_CLIENTIP']) && filter_var($_SERVER['HTTP_X_SUCURI_CLIENTIP'], FILTER_VALIDATE_IP)) {
-			$ipSucuri = $ip = $_SERVER['HTTP_X_SUCURI_CLIENTIP'];
-		}
-
-		// Get real client IP if they are behind Incapsula firewall.
-		if (isset($_SERVER['HTTP_INCAP_CLIENT_IP']) && filter_var($_SERVER['HTTP_INCAP_CLIENT_IP'], FILTER_VALIDATE_IP)) {
-			$ipIncap = $ip = $_SERVER['HTTP_INCAP_CLIENT_IP'];
-		}
-
-		// Get real client IP if they are behind CloudFlare protection.
-		if (isset($_SERVER['HTTP_CF_CONNECTING_IP']) && filter_var($_SERVER['HTTP_CF_CONNECTING_IP'], FILTER_VALIDATE_IP)) {
-			$ipCf = $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
-		}
-
-		if (isset($_SERVER['HTTP_X_REAL_IP']) && filter_var($_SERVER['HTTP_X_REAL_IP'], FILTER_VALIDATE_IP)) {
-			$ipReal = $ip = $_SERVER['HTTP_X_REAL_IP'];
-		}
-
-		// Get real client IP if they are behind proxy server.
-		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-			$ipForwardedOri = $_SERVER['HTTP_X_FORWARDED_FOR'];
-			$xip = trim(current(explode(',', $ipForwardedOri)));
-			
-			if (filter_var($xip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
-				$ipForwarded = $ip = $xip;
-			}
-		}
-
-		if (!empty($ipData)) {
-			if (is_array($ipData)) {
-				if ($ipRemoteAdd != '::1') {
-					$ipData['REMOTE_ADDR'] = $ipRemoteAdd;
-				}
-
-				if ($ipSucuri != '::1') {
-					$ipData['HTTP_X_SUCURI_CLIENTIP'] = $ipSucuri;
-				}
-
-				if ($ipIncap != '::1') {
-					$ipData['HTTP_INCAP_CLIENT_IP'] = $ipIncap;
-				}
-
-				if ($ipCf != '::1') {
-					$ipData['HTTP_CF_CONNECTING_IP'] = $ipCf;
-				}
-
-				if ($ipReal != '::1') {
-					$ipData['HTTP_X_REAL_IP'] = $ipReal;
-				}
-
-				if ($ipForwardedOri != '::1') {
-					$ipData['HTTP_X_FORWARDED_FOR'] = $ipForwardedOri;
-				}
-			}
-		}
-
-		return $ip;
 	}
 
 	/**
