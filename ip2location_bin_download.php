@@ -33,9 +33,31 @@ if(isset($inputs["file"])) {
     $dbCode = $inputs["file"];
 }
 
+$envFilePath = realpath(ROOT . ".env");
+$varArr = [];
+if (is_file($envFilePath)) {
+    if (is_readable($envFilePath)) {
+        $fopen = fopen($envFilePath, 'r');
+        if ($fopen){
+            while (($line = fgets($fopen)) !== false) {
+                $commentLine = (substr(trim($line),0 , 1) == '#') ? true: false;
+                if ($commentLine || empty(trim($line))) {
+                    continue;
+                }
+                $varLine = explode("#", $line, 2)[0];
+                $envEx = preg_split('/(\s?)\=(\s?)/', $varLine);
+                $envName = trim($envEx[0]);
+                $envValue = isset($envEx[1]) ? trim($envEx[1]) : "";
+                $varArr[$envName] = $envValue;
+            }
+            fclose($fopen);
+        }
+    }
+}
+
 if ($token == '') {
-    if (!empty(getenv('DOWNLOAD_TOKEN'))) {
-        $token = getenv('DOWNLOAD_TOKEN');
+    if (isset($varArr['DOWNLOAD_TOKEN'])) {
+        $token = $varArr['DOWNLOAD_TOKEN'];
     } else {
         echo "[Error] Missing --token command line switch or parameter.\n";
         exit;
@@ -43,8 +65,8 @@ if ($token == '') {
 }
 
 if ($dbCode == '') {
-    if (!empty(getenv('DATABASE_CODE'))) {
-        $dbCode = getenv('DATABASE_CODE');
+    if (isset($varArr['DATABASE_CODE'])) {
+        $dbCode = $varArr['DATABASE_CODE'];
     } else {
         echo "[Error] Missing --file command line switch or parameter.\n";
         exit;

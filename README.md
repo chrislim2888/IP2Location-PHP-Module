@@ -128,7 +128,7 @@ The command above will download the DATABASE_CODE BIN file and unzip the file in
 |token|Download token. You can get your token at your [IP2Location Account Area](https://www.ip2location.com/account) at the Download page.|
 |file|Database package. (DB1BIN...DB26BIN, DB1BINIPV6...DB26BINIPV6, DB1LITEBIN...DB11LITEBIN or DB1LITEBINIPV6...DB11LITEBINIPV6) You may login to your [IP2Location Account Area](https://www.ip2location.com/account) and get the package code (or download code) at the Download page. |
 
-For linux user, you can set the **DOWNLOAD_TOKEN** and **DATABASE_CODE** with values in your .env environment and run the command `php ip2location_bin_download.php` for the download.
+You can set the **DOWNLOAD_TOKEN** and **DATABASE_CODE** with values in the .env file and run the command `php ip2location_bin_download.php` for the download.
 
 ## IPv4 BIN vs IPv6 BIN
 * Use the IPv4 BIN file if you just need to query IPv4 addresses.
