@@ -22,6 +22,7 @@ $inputs = getopt($shortOpt, $longOpt);
 $token = '';
 $dbCode = '';
 $fileName = '';
+$fileNameDwld = '';
 $fileSize = 0;
 
 if(isset($inputs["token"])) {
@@ -50,261 +51,319 @@ if ($dbCode == '') {
     }
 }
 
-$action = readline('Do you want to proceed with the download as it will replace the existing BIN file if found? (y/n): ');
+switch($dbCode) {
+    case 'DB1BIN':
+        $fileName = "IP2LOCATION-DB1.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY.BIN.ZIP";
+    break;
+
+    case 'DB2BIN':
+        $fileName = "IP2LOCATION-DB2.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-ISP.BIN.ZIP";
+    break;
+
+    case 'DB3BIN':
+        $fileName = "IP2LOCATION-DB3.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY.BIN.ZIP";
+    break;
+
+    case 'DB4BIN':
+        $fileName = "IP2LOCATION-DB4.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-ISP.BIN.ZIP";
+    break;
+
+    case 'DB5BIN':
+        $fileName = "IP2LOCATION-DB5.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE.BIN.ZIP";
+    break;
+
+    case 'DB6BIN':
+        $fileName = "IP2LOCATION-DB6.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP.BIN.ZIP";
+    break;
+
+    case 'DB7BIN':
+        $fileName = "IP2LOCATION-DB7.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-ISP-DOMAIN.BIN.ZIP";
+    break;
+
+    case 'DB8BIN':
+        $fileName = "IP2LOCATION-DB8.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN.BIN.ZIP";
+    break;
+
+    case 'DB9BIN':
+        $fileName = "IP2LOCATION-DB9.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE.BIN.ZIP";
+    break;
+
+    case 'DB10BIN':
+        $fileName = "IP2LOCATION-DB10.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-ISP-DOMAIN.BIN.ZIP";
+    break;
+
+    case 'DB11BIN':
+        $fileName = "IP2LOCATION-DB11.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE.BIN.ZIP";
+    break;
+
+    case 'DB12BIN':
+        $fileName = "IP2LOCATION-DB12.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN.BIN.ZIP";
+    break;
+
+    case 'DB13BIN':
+        $fileName = "IP2LOCATION-DB13.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-TIMEZONE-NETSPEED.BIN.ZIP";
+    break;
+
+    case 'DB14BIN':
+        $fileName = "IP2LOCATION-DB14.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED.BIN.ZIP";
+    break;
+
+    case 'DB15BIN':
+        $fileName = "IP2LOCATION-DB15.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-AREACODE.BIN.ZIP";
+    break;
+
+    case 'DB16BIN':
+        $fileName = "IP2LOCATION-DB16.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE.BIN.ZIP";
+    break;
+
+    case 'DB17BIN':
+        $fileName = "IP2LOCATION-DB17.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-TIMEZONE-NETSPEED-WEATHER.BIN.ZIP";
+    break;
+
+    case 'DB18BIN':
+        $fileName = "IP2LOCATION-DB18.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER.BIN.ZIP";
+    break;
+
+    case 'DB19BIN':
+        $fileName = "IP2LOCATION-DB19.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE.BIN.ZIP";
+    break;
+
+    case 'DB20BIN':
+        $fileName = "IP2LOCATION-DB20.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE.BIN.ZIP";
+    break;
+
+    case 'DB21BIN':
+        $fileName = "IP2LOCATION-DB21.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-AREACODE-ELEVATION.BIN.ZIP";
+    break;
+
+    case 'DB22BIN':
+        $fileName = "IP2LOCATION-DB22.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION.BIN.ZIP";
+    break;
+
+    case 'DB23BIN':
+        $fileName = "IP2LOCATION-DB23.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE-USAGETYPE.BIN.ZIP";
+    break;
+
+    case 'DB24BIN':
+        $fileName = "IP2LOCATION-DB24.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE.BIN.ZIP";
+    break;
+
+    case 'DB25BIN':
+        $fileName = "IP2LOCATION-DB25.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE-ADDRESSTYPE-CATEGORY.BIN.ZIP";
+    break;
+
+    case 'DB26BIN':
+        $fileName = "IP2LOCATION-DB26.BIN.ZIP";
+        $fileNameDwld = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE-ADDRESSTYPE-CATEGORY-DISTRICT-ASN.BIN.ZIP";
+    break;
+
+    case 'DB1BINIPV6':
+        $fileName = "IP2LOCATION-DB1.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY.BIN.ZIP";
+    break;
+
+    case 'DB2BINIPV6':
+        $fileName = "IP2LOCATION-DB2.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-ISP.BIN.ZIP";
+    break;
+
+    case 'DB3BINIPV6':
+        $fileName = "IP2LOCATION-DB3.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY.BIN.ZIP";
+    break;
+
+    case 'DB4BINIPV6':
+        $fileName = "IP2LOCATION-DB4.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-ISP.BIN.ZIP";
+    break;
+
+    case 'DB5BINIPV6':
+        $fileName = "IP2LOCATION-DB5.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE.BIN.ZIP";
+    break;
+
+    case 'DB6BINIPV6':
+        $fileName = "IP2LOCATION-DB6.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP.BIN.ZIP";
+    break;
+
+    case 'DB7BINIPV6':
+        $fileName = "IP2LOCATION-DB7.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-ISP-DOMAIN.BIN.ZIP";
+    break;
+
+    case 'DB8BINIPV6':
+        $fileName = "IP2LOCATION-DB8.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN.BIN.ZIP";
+    break;
+
+    case 'DB9BINIPV6':
+        $fileName = "IP2LOCATION-DB9.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE.BIN.ZIP";
+    break;
+
+    case 'DB10BINIPV6':
+        $fileName = "IP2LOCATION-DB10.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-ISP-DOMAIN.BIN.ZIP";
+    break;
+
+    case 'DB11BINIPV6':
+        $fileName = "IP2LOCATION-DB11.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE.BIN.ZIP";
+    break;
+
+    case 'DB12BINIPV6':
+        $fileName = "IP2LOCATION-DB12.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN.BIN.ZIP";
+    break;
+
+    case 'DB13BINIPV6':
+        $fileName = "IP2LOCATION-DB13.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-TIMEZONE-NETSPEED.BIN.ZIP";
+    break;
+
+    case 'DB14BINIPV6':
+        $fileName = "IP2LOCATION-DB14.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED.BIN.ZIP";
+    break;
+
+    case 'DB15BINIPV6':
+        $fileName = "IP2LOCATION-DB15.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-AREACODE.BIN.ZIP";
+    break;
+
+    case 'DB16BINIPV6':
+        $fileName = "IP2LOCATION-DB16.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE.BIN.ZIP";
+    break;
+
+    case 'DB17BINIPV6':
+        $fileName = "IP2LOCATION-DB17.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-TIMEZONE-NETSPEED-WEATHER.BIN.ZIP";
+    break;
+
+    case 'DB18BINIPV6':
+        $fileName = "IP2LOCATION-DB18.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER.BIN.ZIP";
+    break;
+
+    case 'DB19BINIPV6':
+        $fileName = "IP2LOCATION-DB19.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE.BIN.ZIP";
+    break;
+
+    case 'DB20BINIPV6':
+        $fileName = "IP2LOCATION-DB20.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE.BIN.ZIP";
+    break;
+
+    case 'DB21BINIPV6':
+        $fileName = "IP2LOCATION-DB21.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-AREACODE-ELEVATION.BIN.ZIP";
+    break;
+
+    case 'DB22BINIPV6':
+        $fileName = "IP2LOCATION-DB22.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION.BIN.ZIP";
+    break;
+
+    case 'DB23BINIPV6':
+        $fileName = "IP2LOCATION-DB23.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE-USAGETYPE.BIN.ZIP";
+    break;
+
+    case 'DB24BINIPV6':
+        $fileName = "IP2LOCATION-DB24.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE.BIN.ZIP";
+    break;
+
+    case 'DB25BINIPV6':
+        $fileName = "IP2LOCATION-DB25.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE-ADDRESSTYPE-CATEGORY.BIN.ZIP";
+    break;
+
+    case 'DB26BINIPV6':
+        $fileName = "IP2LOCATION-DB26.IPV6.BIN.ZIP";
+        $fileNameDwld = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE-ADDRESSTYPE-CATEGORY-DISTRICT-ASN.BIN.ZIP";
+    break;
+
+    case 'DB1LITEBIN':
+        $fileName = "IP2LOCATION-LITE-DB1.BIN.ZIP";
+    break;
+
+    case 'DB3LITEBIN':
+        $fileName = "IP2LOCATION-LITE-DB3.BIN.ZIP";
+    break;
+
+    case 'DB5LITEBIN':
+        $fileName = "IP2LOCATION-LITE-DB5.BIN.ZIP";
+    break;
+
+    case 'DB9LITEBIN':
+        $fileName = "IP2LOCATION-LITE-DB9.BIN.ZIP";
+    break;
+
+    case 'DB11LITEBIN':
+        $fileName = "IP2LOCATION-LITE-DB11.BIN.ZIP";
+    break;
+
+    case 'DB1LITEBINIPV6':
+        $fileName = "IP2LOCATION-LITE-DB1-IPV6.BIN.ZIP";
+    break;
+
+    case 'DB3LITEBINIPV6':
+        $fileName = "IP2LOCATION-LITE-DB3-IPV6.BIN.ZIP";
+    break;
+
+    case 'DB5LITEBINIPV6':
+        $fileName = "IP2LOCATION-LITE-DB5-IPV6.BIN.ZIP";
+    break;
+
+    case 'DB9LITEBINIPV6':
+        $fileName = "IP2LOCATION-LITE-DB9-IPV6.BIN.ZIP";
+    break;
+
+    case 'DB11LITEBINIPV6':
+        $fileName = "IP2LOCATION-LITE-DB11-IPV6.BIN.ZIP";
+    break;
+
+    default:
+        $fileName = '';
+}
+
+if ($fileName != '') {
+    $action = readline('The ' . substr($fileName, 0, -4) . ' file inside the data folder will be replaced. Would you like to proceed? (y/n): ');
+} else {
+    echo "[Error] Unknown --file command line parameter.\n";
+    exit;
+}
+
 if (strtolower(trim($action)) == 'y') {
-    switch($dbCode) {
-        case 'DB1BIN':
-            $fileName = "IP-COUNTRY.BIN.ZIP";
-        break;
-
-        case 'DB2BIN':
-            $fileName = "IP-COUNTRY-ISP.BIN.ZIP";
-        break;
-
-        case 'DB3BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY.BIN.ZIP";
-        break;
-
-        case 'DB4BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-ISP.BIN.ZIP";
-        break;
-
-        case 'DB5BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE.BIN.ZIP";
-        break;
-
-        case 'DB6BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP.BIN.ZIP";
-        break;
-
-        case 'DB7BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-ISP-DOMAIN.BIN.ZIP";
-        break;
-
-        case 'DB8BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN.BIN.ZIP";
-        break;
-
-        case 'DB9BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE.BIN.ZIP";
-        break;
-
-        case 'DB10BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-ISP-DOMAIN.BIN.ZIP";
-        break;
-
-        case 'DB11BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE.BIN.ZIP";
-        break;
-
-        case 'DB12BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN.BIN.ZIP";
-        break;
-
-        case 'DB13BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-TIMEZONE-NETSPEED.BIN.ZIP";
-        break;
-
-        case 'DB14BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED.BIN.ZIP";
-        break;
-
-        case 'DB15BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-AREACODE.BIN.ZIP";
-        break;
-
-        case 'DB16BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE.BIN.ZIP";
-        break;
-
-        case 'DB17BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-TIMEZONE-NETSPEED-WEATHER.BIN.ZIP";
-        break;
-
-        case 'DB18BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER.BIN.ZIP";
-        break;
-
-        case 'DB19BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE.BIN.ZIP";
-        break;
-
-        case 'DB20BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE.BIN.ZIP";
-        break;
-
-        case 'DB21BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-AREACODE-ELEVATION.BIN.ZIP";
-        break;
-
-        case 'DB22BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION.BIN.ZIP";
-        break;
-
-        case 'DB23BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE-USAGETYPE.BIN.ZIP";
-        break;
-
-        case 'DB24BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE.BIN.ZIP";
-        break;
-
-        case 'DB25BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE-ADDRESSTYPE-CATEGORY.BIN.ZIP";
-        break;
-
-        case 'DB26BIN':
-            $fileName = "IP-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE-ADDRESSTYPE-CATEGORY-DISTRICT-ASN.BIN.ZIP";
-        break;
-
-        case 'DB1BINIPV6':
-            $fileName = "IPV6-COUNTRY.BIN.ZIP";
-        break;
-
-        case 'DB2BINIPV6':
-            $fileName = "IPV6-COUNTRY-ISP.BIN.ZIP";
-        break;
-
-        case 'DB3BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY.BIN.ZIP";
-        break;
-
-        case 'DB4BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-ISP.BIN.ZIP";
-        break;
-
-        case 'DB5BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE.BIN.ZIP";
-        break;
-
-        case 'DB6BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP.BIN.ZIP";
-        break;
-
-        case 'DB7BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-ISP-DOMAIN.BIN.ZIP";
-        break;
-
-        case 'DB8BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN.BIN.ZIP";
-        break;
-
-        case 'DB9BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE.BIN.ZIP";
-        break;
-
-        case 'DB10BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-ISP-DOMAIN.BIN.ZIP";
-        break;
-
-        case 'DB11BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE.BIN.ZIP";
-        break;
-
-        case 'DB12BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN.BIN.ZIP";
-        break;
-
-        case 'DB13BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-TIMEZONE-NETSPEED.BIN.ZIP";
-        break;
-
-        case 'DB14BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED.BIN.ZIP";
-        break;
-
-        case 'DB15BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-AREACODE.BIN.ZIP";
-        break;
-
-        case 'DB16BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE.BIN.ZIP";
-        break;
-
-        case 'DB17BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-TIMEZONE-NETSPEED-WEATHER.BIN.ZIP";
-        break;
-
-        case 'DB18BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER.BIN.ZIP";
-        break;
-
-        case 'DB19BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE.BIN.ZIP";
-        break;
-
-        case 'DB20BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE.BIN.ZIP";
-        break;
-
-        case 'DB21BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-AREACODE-ELEVATION.BIN.ZIP";
-        break;
-
-        case 'DB22BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION.BIN.ZIP";
-        break;
-
-        case 'DB23BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ISP-DOMAIN-MOBILE-USAGETYPE.BIN.ZIP";
-        break;
-
-        case 'DB24BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE.BIN.ZIP";
-        break;
-
-        case 'DB25BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE-ADDRESSTYPE-CATEGORY.BIN.ZIP";
-        break;
-
-        case 'DB26BINIPV6':
-            $fileName = "IPV6-COUNTRY-REGION-CITY-LATITUDE-LONGITUDE-ZIPCODE-TIMEZONE-ISP-DOMAIN-NETSPEED-AREACODE-WEATHER-MOBILE-ELEVATION-USAGETYPE-ADDRESSTYPE-CATEGORY-DISTRICT-ASN.BIN.ZIP";
-        break;
-
-        case 'DB1LITEBIN':
-            $fileName = "IP2LOCATION-LITE-DB1.BIN.ZIP";
-        break;
-
-        case 'DB3LITEBIN':
-            $fileName = "IP2LOCATION-LITE-DB3.BIN.ZIP";
-        break;
-
-        case 'DB5LITEBIN':
-            $fileName = "IP2LOCATION-LITE-DB5.BIN.ZIP";
-        break;
-
-        case 'DB9LITEBIN':
-            $fileName = "IP2LOCATION-LITE-DB9.BIN.ZIP";
-        break;
-
-        case 'DB11LITEBIN':
-            $fileName = "IP2LOCATION-LITE-DB11.BIN.ZIP";
-        break;
-
-        case 'DB1LITEBINIPV6':
-            $fileName = "IP2LOCATION-LITE-DB1-IPV6.BIN.ZIP";
-        break;
-
-        case 'DB3LITEBINIPV6':
-            $fileName = "IP2LOCATION-LITE-DB3-IPV6.BIN.ZIP";
-        break;
-
-        case 'DB5LITEBINIPV6':
-            $fileName = "IP2LOCATION-LITE-DB5-IPV6.BIN.ZIP";
-        break;
-
-        case 'DB9LITEBINIPV6':
-            $fileName = "IP2LOCATION-LITE-DB9-IPV6.BIN.ZIP";
-        break;
-
-        case 'DB11LITEBINIPV6':
-            $fileName = "IP2LOCATION-LITE-DB11-IPV6.BIN.ZIP";
-        break;
-
-        default:
-            $fileName = '';
-    }
-
     if ($fileName == '') {
         echo "[Error] Unknown --file command line parameter.\n";
         exit;
@@ -363,11 +422,17 @@ if (strtolower(trim($action)) == 'y') {
     }
     $zip->close();
 
-    rename(DBTEMP . substr($fileName, 0, -4), DATA . substr($fileName, 0, -4));
+    if ($fileNameDwld != '') {
+        rename(DBTEMP . substr($fileNameDwld, 0, -4), DATA . substr($fileName, 0, -4));
+    } else {
+        rename(DBTEMP . substr($fileName, 0, -4), DATA . substr($fileName, 0, -4));
+    }
     array_map("unlink", glob(DBTEMP . "*"));
     array_map("rmdir", glob(DBTEMP . "*"));
     rmdir(DBTEMP);
     unlink($fileName);
+
+    echo "[Success] The " . substr($fileName, 0, -4) . " file has been successfully downloaded into data folder.\n";
 } else {
     exit;
 }

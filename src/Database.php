@@ -12,7 +12,7 @@ class Database
 	 *
 	 * @var string
 	 */
-	public const VERSION = '9.5.3';
+	public const VERSION = '9.6.0';
 
 	/**
 	 * Unsupported field message.

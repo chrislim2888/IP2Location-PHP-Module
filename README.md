@@ -121,7 +121,7 @@ You can also sign up for [IP2Location Web Service](https://www.ip2location.com/w
 php ip2location_bin_download.php --token DOWNLOAD_TOKEN --file DATABASE_CODE
 ```
 
-The command above will download the DATABASE_CODE BIN file and unzip the file into ./data folder.
+The command above will download the DATABASE_CODE BIN file and unzip the file into *data* folder.
 
 | Parameters | Description |
 |---|---|
@@ -144,6 +144,6 @@ Below are the list of other framework library that you can install and use right
 
 ## COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2022 by IP2Location.com
+Copyright (C) 2005-2023 by IP2Location.com
 
 License under MIT
