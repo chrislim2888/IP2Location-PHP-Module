@@ -116,6 +116,20 @@ An outdated BIN database was provided in the databases folder for your testing. 
 
 You can also sign up for [IP2Location Web Service](https://www.ip2location.com/web-service/ip2location) to lookup by IP2Location API.
 
+## BIN DOWNLOADER SCRIPT
+```
+php ip2location_bin_download.php --token DOWNLOAD_TOKEN --file DATABASE_CODE
+```
+
+The command above will download the DATABASE_CODE BIN file and unzip the file into ./data folder.
+
+| Parameters | Description |
+|---|---|
+|token|Download token. You can get your token at your [IP2Location Account Area](https://www.ip2location.com/account) at the Download page.|
+|file|Database package. (DB1BIN...DB26BIN, DB1BINIPV6...DB26BINIPV6, DB1LITEBIN...DB11LITEBIN or DB1LITEBINIPV6...DB11LITEBINIPV6) You may login to your [IP2Location Account Area](https://www.ip2location.com/account) and get the package code (or download code) at the Download page. |
+
+For linux user, you can set the **DOWNLOAD_TOKEN** and **DATABASE_CODE** with values in your .env environment and run the command `php ip2location_bin_download.php` for the download.
+
 ## IPv4 BIN vs IPv6 BIN
 * Use the IPv4 BIN file if you just need to query IPv4 addresses.
 * Use the IPv6 BIN file if you need to query BOTH IPv4 and IPv6 addresses.
