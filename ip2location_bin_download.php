@@ -15,12 +15,13 @@ define('DATA', ROOT . 'data' . DS);
 define('DBTEMP', ROOT . 'dbtemp' . DS);
 
 
-$shortOpt = "";
+$shortOpt = "y";
 $longOpt = ["token:", "file:"];
 $inputs = getopt($shortOpt, $longOpt);
 
 $token = '';
 $dbCode = '';
+$passReplace = false;
 $fileName = '';
 $fileNameDwld = '';
 $fileSize = 0;
@@ -31,6 +32,10 @@ if(isset($inputs["token"])) {
 
 if(isset($inputs["file"])) {
     $dbCode = $inputs["file"];
+}
+
+if(isset($inputs["y"])) {
+    $passReplace = true;
 }
 
 $envFilePath = realpath(ROOT . ".env");
@@ -379,7 +384,11 @@ switch($dbCode) {
 }
 
 if ($fileName != '') {
-    $action = readline('The ' . substr($fileName, 0, -4) . ' file inside the data folder will be replaced. Would you like to proceed? (y/n): ');
+    if ($passReplace) {
+        $action = 'y';
+    } else {
+        $action = readline('The ' . substr($fileName, 0, -4) . ' file inside the data folder will be replaced. Would you like to proceed? (y/n): ');
+    }
 } else {
     echo "[Error] Unknown --file command line parameter.\n";
     exit;
@@ -454,7 +463,7 @@ if (strtolower(trim($action)) == 'y') {
     rmdir(DBTEMP);
     unlink($fileName);
 
-    echo "[Success] The " . substr($fileName, 0, -4) . " file has been successfully downloaded into data folder.\n";
+    echo "[Success] The " . substr($fileName, 0, -4) . " file has been successfully downloaded into the data folder.\n";
 } else {
     exit;
 }
