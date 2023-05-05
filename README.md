@@ -5,7 +5,7 @@ IP2Location (PHP Module)
 
 *This is the official release maintained by IP2Location.com*
 
-This PHP module provides fast lookup of country, region, city, latitude, longitude, ZIP code, time zone, ISP, domain name, connection speed, IDD code, area code, weather station code, weather station name, MNC, MCC, mobile brand, elevation, usage type, address type and IAB category from IP address by using IP2Location database. This module uses a file based database available at IP2Location.com. 
+This PHP module provides fast lookup of country, region, district, city, latitude, longitude, ZIP code, time zone, ISP, domain name, connection speed, IDD code, area code, weather station code, weather station name, MNC, MCC, mobile brand, elevation, usage type, address type, IAB category and ASN from IP address by using IP2Location database. This module uses a file based database available at IP2Location.com.
 
 This module can be used in many types of projects such as:
 
@@ -50,10 +50,10 @@ Below is the description of the functions available in the **Database** class.
 |---|---|
 |Constructor|Expect 2 input parameters:<ol><li>Full path of IP2Location BIN data file.</li><li>File Open Mode<ul><li>	SHARED_MEMORY</li><li>MEMORY_CACHE</li><li>FILE_IO</li></ul></li></ol>For SHARED_MEMORY and MEMORY_CACHE, it will require your server to have sufficient memory to hold the BIN data, otherwise it will raise the errors during the object initialization.|
 |**string** getDate()|Return the database's compilation date as a string of the form 'YYYY-MM-DD'|
-|**string** getType()|Return the database's type, 1 to 25 respectively for DB1 to DB25. Please visit https://www.ip2location.com/databases for details.|
+|**string** getType()|Return the database's type, 1 to 26 respectively for DB1 to DB26. Please visit https://www.ip2location.com/databases for details.|
 |**string** getModuleVersion()|Return the version of module|
 |**string** getDatabaseVersion()|Return the version of database|
-|**array** lookup($ip)|Return the IP information in array. Below is the information returned:<ul><li>ipNumber</li><li>ipVersion</li><li>ipAddress</li><li>countryCode</li><li>countryName</li><li>regionName</li><li>cityName</li><li>latitude</li><li>longitude</li><li>areaCode</li><li>iddCode</li><li>weatherStationCode</li><li>weatherStationName</li><li>mcc</li><li>mnc</li><li>mobileCarrierName</li><li>usageType</li><li>elevation</li><li>netSpeed</li><li>timeZone</li><li>zipCode</li><li>domainName</li><li>isp</li><li>addressType</li><li>category</li></ul>You can visit [IP2Location](https://www.ip2location.com/databases/db25-ip-country-region-city-latitude-longitude-zipcode-timezone-isp-domain-netspeed-areacode-weather-mobile-elevation-usagetype-addresstype-category) for the description of each field. Note: although the above names are not exactly matched with the names given in this link, but they are self-described.|
+|**array** lookup($ip)|Return the IP information in array. Below is the information returned:<ul><li>ipNumber</li><li>ipVersion</li><li>ipAddress</li><li>countryCode</li><li>countryName</li><li>regionName</li><li>cityName</li><li>latitude</li><li>longitude</li><li>areaCode</li><li>iddCode</li><li>weatherStationCode</li><li>weatherStationName</li><li>mcc</li><li>mnc</li><li>mobileCarrierName</li><li>usageType</li><li>elevation</li><li>netSpeed</li><li>timeZone</li><li>zipCode</li><li>domainName</li><li>isp</li><li>addressType</li><li>category</li><li>district</li><li>asn</li><li>as</li></ul>You can visit [IP2Location](https://www.ip2location.com/databases/db26-ip-country-region-city-latitude-longitude-zipcode-timezone-isp-domain-netspeed-areacode-weather-mobile-elevation-usagetype-addresstype-category-district-asn) for the description of each field. Note: although the above names are not exactly matched with the names given in this link, but they are self-described.|
 |**array** getCidr($ip)|Return an array of the complete IP list in CIDR format of the detected row record based on the given IP address.|
 
 

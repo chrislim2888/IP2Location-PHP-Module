@@ -47,6 +47,9 @@ echo 'Domain Name           : ' . $records['domainName'] . "\n";
 echo 'ISP Name              : ' . $records['isp'] . "\n";
 echo 'Address Type          : ' . $records['addressType'] . "\n";
 echo 'Category              : ' . $records['category'] . "\n";
+echo 'District              : ' . $records['district'] . "\n";
+echo 'ASN                   : ' . $records['asn'] . "\n";
+echo 'AS                    : ' . $records['as'] . "\n";
 echo '</pre>';
 
 echo '<pre>
