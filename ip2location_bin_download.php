@@ -446,7 +446,7 @@ if (strtolower(trim($action)) == 'y') {
     $zip = new ZipArchive;
     $res = $zip->open($fileName);
     if ($res === TRUE) {
-        $zip->extractTo("dbtemp");
+        $zip->extractTo(DBTEMP);
     } else {
         echo "[Error] Unzip error of " . $fileName . ".\n";
         exit;
