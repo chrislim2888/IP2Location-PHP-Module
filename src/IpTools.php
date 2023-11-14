@@ -194,37 +194,25 @@ class IpTools
 
 		list($ip, $range) = explode('/', $cidr);
 
-		// Convert the IPv6 into binary
-		$binFirstAddress = inet_pton($ip);
+		$parts = explode(':', $this->expandIpv6($ip));
 
-		// Convert the binary string to a string with hexadecimal characters
-		$hexStartAddress = @reset(@unpack('H*0', $binFirstAddress));
+		$bitStart = str_repeat('1', $range) . str_repeat('0', 128 - $range);
+		$bitEnd = str_repeat('0', $range) . str_repeat('1', 128 - $range);
 
-		// Get available bits
-		$bits = 128 - $range;
+		$floors = str_split($bitStart, 16);
+		$ceilings = str_split($bitEnd, 16);
 
-		$hexLastAddress = $hexStartAddress;
+		$start = [];
+		$end = [];
 
-		$pos = 31;
-		while ($bits > 0) {
-			// Convert current character to an integer
-			$int = hexdec(substr($hexLastAddress, $pos, 1));
-
-			// Convert it back to a hexadecimal character
-			$new = dechex($int | (pow(2, min(4, $bits)) - 1));
-
-			// And put that character back in the string
-			$hexLastAddress = substr_replace($hexLastAddress, $new, $pos, 1);
-
-			$bits -= 4;
-			--$pos;
+		for ($i = 0; $i < 8; ++$i) {
+			$start[] = dechex(hexdec($parts[$i]) & hexdec(base_convert($floors[$i], 2, 16))) . ':';
+			$end[] = dechex(hexdec($parts[$i]) | hexdec(base_convert($ceilings[$i], 2, 16))) . ':';
 		}
 
-		$binLastAddress = pack('H*', $hexLastAddress);
-
 		return [
-			'ip_start' => $this->expand(inet_ntop($binFirstAddress)),
-			'ip_end'   => $this->expand(inet_ntop($binLastAddress)),
+			'ip_start' => $this->expandIpv6(substr(implode('', $start), 0, -1)),
+			'ip_end'   => $this->expandIpv6(substr(implode('', $end), 0, -1)),
 		];
 	}
 
