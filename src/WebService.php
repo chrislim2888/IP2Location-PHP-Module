@@ -27,6 +27,10 @@ class WebService
 	 * @var int
 	 */
 	public const EXCEPTION_WEB_SERVICE_ERROR = 10003;
+	
+	private $apiKey;
+	private $package;
+	private $useSsl;
 
 	/**
 	 * Constructor.
