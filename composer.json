@@ -19,7 +19,6 @@
 		"php": ">=7.2",
 		"ext-bcmath": "*",
 		"ext-curl": "*",
-		"ext-gmp": "*",
 		"ext-json": "*"
 	},
 	"autoload": {
