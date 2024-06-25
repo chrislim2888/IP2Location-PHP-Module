@@ -14,7 +14,7 @@ class RegionTest extends TestCase
 
 		$this->assertEquals(
 			'US-CA',
-			$region->getRegionCode('US', 'California'),
+			$region->getRegionCode('US', 'California')
 		);
 	}
 }

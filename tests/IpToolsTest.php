@@ -139,7 +139,7 @@ class IpToolsTest extends TestCase
 
 		$this->assertEqualsCanonicalizing(
 			[
-				'ip_start' => '2002:0000:0000:1234:abcd:ffff:c0a8:0101',
+				'ip_start' => '2002:0000:0000:1234:0000:0000:0000:0000',
 				'ip_end'   => '2002:0000:0000:1234:ffff:ffff:ffff:ffff',
 			],
 			$ipTools->cidrToIpv6('2002::1234:abcd:ffff:c0a8:101/64')

@@ -11,7 +11,12 @@ class WebServiceTest extends TestCase
 {
 	public function testCredit() {
 		$ws = new \IP2Location\WebService('demo', 'WS24', true);
-		$this->assertMatchesRegularExpression('/^[0-9]+$/', (string) $ws->getCredit());
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression('/^[0-9]+$/', (string) $ws->getCredit());
+        }else{
+            // Compatible with php 7.2 && phpunit 8.x
+            $this->assertRegExp('/^[0-9]+$/', (string) $ws->getCredit());
+        }
 	}
 
 	public function testCountryCode() {
@@ -23,7 +28,7 @@ class WebServiceTest extends TestCase
 
 		$this->assertEquals(
 			'US',
-			$records['country_code'],
+			$records['country_code']
 		);
 	}
 }

@@ -1,0 +1,38 @@
+name: PHP Tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: [ '7.2', '7.3', '7.4', '8.0', '8.1', '8.2', '8.3' ]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: bcmath, curl, json
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: |
+          if [ "${{ matrix.php-version }}" = "7.2" ]; then
+            composer require --dev phpunit/phpunit:^8.0 --no-update
+          fi
+          composer install --no-progress --prefer-dist
+
+      - name: Run tests
+        run: vendor/bin/phpunit
