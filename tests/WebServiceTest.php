@@ -23,7 +23,7 @@ class WebServiceTest extends TestCase
 
 		$this->assertEquals(
 			'US',
-			$records['country_code'],
+			$records['country_code']
 		);
 	}
 }
