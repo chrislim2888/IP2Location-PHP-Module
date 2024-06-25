@@ -28,15 +28,12 @@ jobs:
           coverage: none
 
       - name: Install Composer dependencies
-        run: composer install --no-progress --prefer-dist
-
-      - name: Install PHPUnit
         run: |
-          if [[ "${{ matrix.php-version }}" == "7.2" ]]; then
-            composer require --dev phpunit/phpunit:^8;
-          else
-            composer require --dev phpunit/phpunit:^9.5;
-          fi  
+          if [ "${{ matrix.php-version }}" = "7.2" ]; then
+            composer require --dev phpunit/phpunit:^8.0
+          fi
+          composer run-script set-platform
+          composer install --no-progress --prefer-dist
 
       - name: Run tests
         run: vendor/bin/phpunit
