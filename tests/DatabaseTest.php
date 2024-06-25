@@ -24,7 +24,7 @@ class DatabaseTest extends TestCase
 
 		$this->assertEquals(
 			'US',
-			$records['countryCode'],
+			$records['countryCode']
 		);
 	}
 
