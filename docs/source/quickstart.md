@@ -13,10 +13,6 @@ download the BIN database at
 An outdated BIN database was provided in the databases folder for your testing. You are recommended to visit the above links to download the latest BIN database.
 :::
 
-## Requirements
-
-1.  Python 3.5 and above.
-
 ## Installation
 
 Install this package using **composer** as below:
