@@ -73,6 +73,6 @@ Below are the list of other framework library that you can install and use right
 
 ## COPYRIGHT AND LICENSE
 
-Copyright (C) 2005-2024 by IP2Location.com
+Copyright (C) 2005-2025 by IP2Location.com
 
 License under MIT
