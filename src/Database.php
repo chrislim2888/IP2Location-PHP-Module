@@ -12,7 +12,7 @@ class Database
 	 *
 	 * @var string
 	 */
-	public const VERSION = '9.7.3';
+	public const VERSION = '9.8.0';
 
 	/**
 	 * Unsupported field message.
@@ -223,6 +223,27 @@ class Database
 	 * @var int
 	 */
 	public const AS = 25;
+
+	/**
+	 * AS domain.
+	 *
+	 * @var int
+	 */
+	public const AS_DOMAIN = 26;
+
+	/**
+	 * AS usage type.
+	 *
+	 * @var int
+	 */
+	public const AS_USAGE_TYPE = 27;
+
+	/**
+	 * AS CIDR.
+	 *
+	 * @var int
+	 */
+	public const AS_CIDR = 28;
 
 	/**
 	 * Country name and code.
@@ -440,6 +461,9 @@ class Database
 		self::DISTRICT             => [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  92],
 		self::ASN                  => [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  96],
 		self::AS                   => [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 100],
+		self::AS_DOMAIN            => [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 104],
+		self::AS_USAGE_TYPE        => [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 108],
+		self::AS_CIDR              => [0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 112],
 	];
 
 	/**
@@ -473,6 +497,9 @@ class Database
 		self::DISTRICT             => 'district',
 		self::ASN                  => 'asn',
 		self::AS                   => 'as',
+		self::AS_DOMAIN            => 'asDomain',
+		self::AS_USAGE_TYPE        => 'asUsageType',
+		self::AS_CIDR              => 'asCidr',
 		self::IP_ADDRESS           => 'ipAddress',
 		self::IP_VERSION           => 'ipVersion',
 		self::IP_NUMBER            => 'ipNumber',
@@ -1039,6 +1066,9 @@ class Database
 			$ifields[] = self::DISTRICT;
 			$ifields[] = self::ASN;
 			$ifields[] = self::AS;
+			$ifields[] = self::AS_DOMAIN;
+			$ifields[] = self::AS_USAGE_TYPE;
+			$ifields[] = self::AS_CIDR;
 
 			$ifields[] = self::COUNTRY;
 			$ifields[] = self::COORDINATES;
@@ -1085,6 +1115,9 @@ class Database
 			self::DISTRICT                    => false,
 			self::ASN                         => false,
 			self::AS                          => false,
+			self::AS_DOMAIN                   => false,
+			self::AS_USAGE_TYPE               => false,
+			self::AS_CIDR                     => false,
 			self::COUNTRY                     => false,
 			self::COORDINATES                 => false,
 			self::IDD_AREA                    => false,
@@ -1324,6 +1357,27 @@ class Database
 					}
 					break;
 
+				case self::AS_DOMAIN:
+					if (!$done[self::AS_DOMAIN]) {
+						$results[self::AS_DOMAIN] = $this->readAsDomain($pointer);
+						$done[self::AS_DOMAIN] = true;
+					}
+					break;
+
+				case self::AS_USAGE_TYPE:
+					if (!$done[self::AS_USAGE_TYPE]) {
+						$results[self::AS_USAGE_TYPE] = $this->readAsUsageType($pointer);
+						$done[self::AS_USAGE_TYPE] = true;
+					}
+					break;
+
+				case self::AS_CIDR:
+					if (!$done[self::AS_CIDR]) {
+						$results[self::AS_CIDR] = $this->readAsCidr($pointer);
+						$done[self::AS_CIDR] = true;
+					}
+					break;
+
 				case self::IP_ADDRESS:
 					if (!$done[self::IP_ADDRESS]) {
 						$results[self::IP_ADDRESS] = $ip;
@@ -1462,9 +1516,9 @@ class Database
 				// Deal with shorthand bytes
 				switch (strtoupper(substr($memoryLimit, -1))) {
 					case 'G': $value *= 1024;
-					// no break
+						// no break
 					case 'M': $value *= 1024;
-					// no break
+						// no break
 					case 'K': $value *= 1024;
 				}
 			}
@@ -2155,6 +2209,66 @@ class Database
 		}
 
 		return $this->readString($this->columns[self::AS][$this->type]);
+	}
+
+	/**
+	 * High level function to fetch the AS domain.
+	 *
+	 * @param int $pointer Position to read from, if false, return self::INVALID_IP_ADDRESS
+	 *
+	 * @return string
+	 */
+	private function readAsDomain($pointer)
+	{
+		if ($pointer === false) {
+			return self::INVALID_IP_ADDRESS;
+		}
+
+		if ($this->columns[self::AS_DOMAIN][$this->type] === 0) {
+			return self::FIELD_NOT_SUPPORTED;
+		}
+
+		return $this->readString($this->columns[self::AS_DOMAIN][$this->type]);
+	}
+
+	/**
+	 * High level function to fetch the AS usage type.
+	 *
+	 * @param int $pointer Position to read from, if false, return self::INVALID_IP_ADDRESS
+	 *
+	 * @return string
+	 */
+	private function readAsUsageType($pointer)
+	{
+		if ($pointer === false) {
+			return self::INVALID_IP_ADDRESS;
+		}
+
+		if ($this->columns[self::AS_USAGE_TYPE][$this->type] === 0) {
+			return self::FIELD_NOT_SUPPORTED;
+		}
+
+		return $this->readString($this->columns[self::AS_USAGE_TYPE][$this->type]);
+	}
+
+	/**
+	 * High level function to fetch the AS CIDR.
+	 *
+	 * @param int $pointer Position to read from, if false, return self::INVALID_IP_ADDRESS
+	 *
+	 * @return string
+	 */
+	private function readAsCidr($pointer)
+	{
+		if ($pointer === false) {
+			return self::INVALID_IP_ADDRESS;
+		}
+
+		if ($this->columns[self::AS_CIDR][$this->type] === 0) {
+			return self::FIELD_NOT_SUPPORTED;
+		}
+
+		return $this->readString($this->columns[self::AS_CIDR][$this->type]);
 	}
 
 	/**
