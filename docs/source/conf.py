@@ -6,11 +6,11 @@
 # -- Project information
 
 project = 'IP2Location'
-copyright = '2023, IP2Location'
+copyright = '2025, IP2Location'
 author = 'IP2Location'
 
-release = '9.7.3'
-version = '9.7.3'
+release = '9.8.0'
+version = '9.8.0'
 
 # -- General configuration
 
