@@ -83,6 +83,9 @@ echo 'Category              : ' . $records['category'] . "\n";
 echo 'District              : ' . $records['district'] . "\n";
 echo 'ASN                   : ' . $records['asn'] . "\n";
 echo 'AS                    : ' . $records['as'] . "\n";
+echo 'AS Domain             : ' . $records['asDomain'] . "\n";
+echo 'AS Usage Type         : ' . $records['asUsageType'] . "\n";
+echo 'AS CIDR               : ' . $records['asCidr'] . "\n";
 echo '</pre>';
 ?>
 ```
