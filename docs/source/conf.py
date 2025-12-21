@@ -9,8 +9,8 @@ project = 'IP2Location'
 copyright = '2025, IP2Location'
 author = 'IP2Location'
 
-release = '9.8.0'
-version = '9.8.0'
+release = '9.8.1'
+version = '9.8.1'
 
 # -- General configuration
 

@@ -12,7 +12,7 @@ class Database
 	 *
 	 * @var string
 	 */
-	public const VERSION = '9.8.0';
+	public const VERSION = '9.8.1';
 
 	/**
 	 * Unsupported field message.
@@ -1611,36 +1611,38 @@ class Database
 	/**
 	 * Determine whether the given IP number of the given version lies between the given bounds.
 	 *
-	 * This function will return 0 if the given ip number falls within the given bounds
-	 * for the given version, -1 if it falls below, and 1 if it falls above.
-	 *
 	 * @param int        $version IP version to use (either 4 or 6)
-	 * @param int|string $ip      IP number to check (int for IPv4, string for IPv6)
-	 * @param int|string $low     Lower bound (int for IPv4, string for IPv6)
-	 * @param int|string $high    Uppoer bound (int for IPv4, string for IPv6)
+	 * @param int|string $ip      IP number to check
+	 * @param int|string $low     Lower bound
+	 * @param int|string $high    Upper bound
 	 *
 	 * @return int
 	 */
 	private function ipBetween($version, $ip, $low, $high)
 	{
 		if ($version === 4) {
-			// Use normal PHP ints
+			// Cast unpack results to unsigned integer strings for safe comparison
+			if ($low < 0) {
+				$low = sprintf('%u', $low);
+			}
+			if ($high < 0) {
+				$high = sprintf('%u', $high);
+			}
+
 			if ($low <= $ip) {
 				if ($ip < $high) {
 					return 0;
 				}
-
 				return 1;
 			}
-
 			return -1;
 		}
-		// Use BCMath
+
+		// IPv6
 		if (bccomp($low, $ip, 0) <= 0) {
 			if (bccomp($ip, $high, 0) <= -1) {
 				return 0;
 			}
-
 			return 1;
 		}
 
@@ -1703,8 +1705,8 @@ class Database
 	 */
 	private function bcBin2Dec($data)
 	{
-		if (!$data) {
-			return;
+		if (strlen($data) < 16) {
+			return '0';
 		}
 
 		$parts = [
@@ -1716,11 +1718,22 @@ class Database
 
 		foreach ($parts as &$part) {
 			if ($part[1] < 0) {
-				$part[1] += 4294967296;
+				$part[1] = bcadd((string)$part[1], '4294967296');
 			}
 		}
 
-		$result = bcadd(bcadd(bcmul($parts[0][1], bcpow(4294967296, 3)), bcmul($parts[1][1], bcpow(4294967296, 2))), bcadd(bcmul($parts[2][1], 4294967296), $parts[3][1]));
+		$base = '4294967296';
+
+		$result = bcadd(
+			bcadd(
+				bcmul((string)$parts[0][1], bcpow($base, '3')),
+				bcmul((string)$parts[1][1], bcpow($base, '2'))
+			),
+			bcadd(
+				bcmul((string)$parts[2][1], $base),
+				(string)$parts[3][1]
+			)
+		);
 
 		return $result;
 	}
@@ -1749,18 +1762,16 @@ class Database
 	 */
 	private function read($pos, $len)
 	{
-		switch ($this->mode) {
-			case self::SHARED_MEMORY:
-				return shmop_read($this->resource, $pos, $len);
-
-			case self::MEMORY_CACHE:
-				return $data = substr($this->buffer[$this->resource], $pos, $len);
-
-			default:
-				fseek($this->resource, $pos, SEEK_SET);
-
-				return fread($this->resource, $len);
+		if ($this->mode === self::MEMORY_CACHE) {
+			return (string) substr($this->buffer[$this->resource], $pos, $len);
 		}
+
+		if ($this->mode === self::SHARED_MEMORY) {
+			return shmop_read($this->resource, $pos, $len);
+		}
+
+		fseek($this->resource, $pos, SEEK_SET);
+		return fread($this->resource, $len);
 	}
 
 	/**
@@ -2282,15 +2293,38 @@ class Database
 	 */
 	private function getIpBoundary($ipVersion, $position, $width)
 	{
-		// Read 128 bits from the position
-		$section = $this->read($position, 128);
+		$readLength = $width + ($ipVersion === 4 ? 4 : 16);
+
+		// Read the exact chunk needed
+		$section = $this->read($position, $readLength);
 
 		switch ($ipVersion) {
 			case 4:
-				return [unpack('V', substr($section, 0, 4))[1], unpack('V', substr($section, $width, 4))[1]];
+				// Check if substring extraction works
+				$first = substr($section, 0, 4);
+				$second = substr($section, $width, 4);
+
+				if ($first === false || $second === false) {
+					return [false, false];
+				}
+
+				return [
+					unpack('V', $first)[1],
+					unpack('V', $second)[1]
+				];
 
 			case 6:
-				return [$this->bcBin2Dec(substr($section, 0, 16)), $this->bcBin2Dec(substr($section, $width, 16))];
+				$first = substr($section, 0, 16);
+				$second = substr($section, $width, 16);
+
+				if ($first === false || $second === false || strlen($second) < 16) {
+					return [false, false];
+				}
+
+				return [
+					$this->bcBin2Dec($first),
+					$this->bcBin2Dec($second)
+				];
 		}
 
 		return [false, false];
